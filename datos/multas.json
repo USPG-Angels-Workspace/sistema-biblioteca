@@ -1,0 +1,22 @@
+[
+  {
+    "prestamoId": 2,
+    "usuarioId": 3,
+    "diasAtraso": 5,
+    "monto": 10.00,
+    "fechaGeneracion": "2026-09-06T00:00:00",
+    "pagada": true,
+    "fechaPago": "2026-09-07T00:00:00",
+    "id": 1
+  },
+  {
+    "prestamoId": 3,
+    "usuarioId": 4,
+    "diasAtraso": 7,
+    "monto": 14.00,
+    "fechaGeneracion": "2026-09-09T00:00:00",
+    "pagada": false,
+    "fechaPago": null,
+    "id": 2
+  }
+]

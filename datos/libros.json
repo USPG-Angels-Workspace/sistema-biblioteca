@@ -1,0 +1,178 @@
+[
+  {
+    "isbn": "9789929000011",
+    "titulo": "Cien años de soledad",
+    "autor": "Gabriel García Márquez",
+    "editorial": "Sudamericana",
+    "anio": 1967,
+    "categoria": "Ficcion",
+    "copiasTotales": 3,
+    "copiasDisponibles": 3,
+    "id": 1
+  },
+  {
+    "isbn": "9789929000028",
+    "titulo": "Don Quijote de la Mancha",
+    "autor": "Miguel de Cervantes",
+    "editorial": "Alfaguara",
+    "anio": 1605,
+    "categoria": "Ficcion",
+    "copiasTotales": 2,
+    "copiasDisponibles": 2,
+    "id": 2
+  },
+  {
+    "isbn": "9789929000035",
+    "titulo": "El principito",
+    "autor": "Antoine de Saint-Exupéry",
+    "editorial": "Salamandra",
+    "anio": 1943,
+    "categoria": "Infantil",
+    "copiasTotales": 4,
+    "copiasDisponibles": 4,
+    "id": 3
+  },
+  {
+    "isbn": "9789929000042",
+    "titulo": "Clean Code",
+    "autor": "Robert C. Martin",
+    "editorial": "Prentice Hall",
+    "anio": 2008,
+    "categoria": "Tecnologia",
+    "copiasTotales": 2,
+    "copiasDisponibles": 1,
+    "id": 4
+  },
+  {
+    "isbn": "9789929000059",
+    "titulo": "C# in Depth",
+    "autor": "Jon Skeet",
+    "editorial": "Manning",
+    "anio": 2019,
+    "categoria": "Tecnologia",
+    "copiasTotales": 2,
+    "copiasDisponibles": 2,
+    "id": 5
+  },
+  {
+    "isbn": "9789929000066",
+    "titulo": "Estructuras de datos y análisis de algoritmos",
+    "autor": "Mark Allen Weiss",
+    "editorial": "Pearson",
+    "anio": 2013,
+    "categoria": "Tecnologia",
+    "copiasTotales": 3,
+    "copiasDisponibles": 2,
+    "id": 6
+  },
+  {
+    "isbn": "9789929000073",
+    "titulo": "Breve historia del tiempo",
+    "autor": "Stephen Hawking",
+    "editorial": "Crítica",
+    "anio": 1988,
+    "categoria": "Ciencia",
+    "copiasTotales": 2,
+    "copiasDisponibles": 1,
+    "id": 7
+  },
+  {
+    "isbn": "9789929000080",
+    "titulo": "Sapiens: de animales a dioses",
+    "autor": "Yuval Noah Harari",
+    "editorial": "Debate",
+    "anio": 2011,
+    "categoria": "Historia",
+    "copiasTotales": 3,
+    "copiasDisponibles": 3,
+    "id": 8
+  },
+  {
+    "isbn": "9789929000097",
+    "titulo": "Popol Vuh",
+    "autor": "Anónimo",
+    "editorial": "Editorial Universitaria",
+    "anio": 1550,
+    "categoria": "Historia",
+    "copiasTotales": 2,
+    "copiasDisponibles": 2,
+    "id": 9
+  },
+  {
+    "isbn": "9789929000103",
+    "titulo": "La historia del arte",
+    "autor": "Ernst Gombrich",
+    "editorial": "Phaidon",
+    "anio": 1950,
+    "categoria": "Arte",
+    "copiasTotales": 1,
+    "copiasDisponibles": 1,
+    "id": 10
+  },
+  {
+    "isbn": "9789929000110",
+    "titulo": "Diccionario de la lengua española",
+    "autor": "Real Academia Española",
+    "editorial": "Espasa",
+    "anio": 2014,
+    "categoria": "Referencia",
+    "copiasTotales": 2,
+    "copiasDisponibles": 1,
+    "id": 11
+  },
+  {
+    "isbn": "9789929000127",
+    "titulo": "UML y patrones",
+    "autor": "Craig Larman",
+    "editorial": "Pearson",
+    "anio": 2003,
+    "categoria": "Tecnologia",
+    "copiasTotales": 2,
+    "copiasDisponibles": 1,
+    "id": 12
+  },
+  {
+    "isbn": "9789929000134",
+    "titulo": "El Señor de los Anillos",
+    "autor": "J. R. R. Tolkien",
+    "editorial": "Minotauro",
+    "anio": 1954,
+    "categoria": "Ficcion",
+    "copiasTotales": 3,
+    "copiasDisponibles": 2,
+    "id": 13
+  },
+  {
+    "isbn": "9789929000141",
+    "titulo": "Cálculo de una variable",
+    "autor": "James Stewart",
+    "editorial": "Cengage",
+    "anio": 2012,
+    "categoria": "Ciencia",
+    "copiasTotales": 2,
+    "copiasDisponibles": 2,
+    "id": 14
+  },
+  {
+    "isbn": "9789929000158",
+    "titulo": "Hábitos atómicos",
+    "autor": "James Clear",
+    "editorial": "Paidós",
+    "anio": 2018,
+    "categoria": "NoFiccion",
+    "copiasTotales": 2,
+    "copiasDisponibles": 1,
+    "id": 15
+  },
+  {
+    "isbn": "9789929000165",
+    "titulo": "Rayuela",
+    "autor": "Julio Cortázar",
+    "editorial": "Alfaguara",
+    "anio": 1963,
+    "categoria": "Ficcion",
+    "copiasTotales": 1,
+    "copiasDisponibles": 0,
+    "id": 16
+  }
+]

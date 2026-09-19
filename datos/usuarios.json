@@ -1,0 +1,90 @@
+[
+  {
+    "tipo": "lector",
+    "carnet": "2026-0101",
+    "nombre": "María Fernanda López",
+    "documento": "2456789010101",
+    "correo": "maria.lopez@ejemplo.com",
+    "telefono": "55123401",
+    "fechaRegistro": "2026-08-03T00:00:00",
+    "activo": true,
+    "id": 1
+  },
+  {
+    "tipo": "lector",
+    "carnet": "2026-0102",
+    "nombre": "Carlos Alberto Méndez",
+    "documento": "2456789020101",
+    "correo": "carlos.mendez@ejemplo.com",
+    "telefono": "55123402",
+    "fechaRegistro": "2026-08-03T00:00:00",
+    "activo": true,
+    "id": 2
+  },
+  {
+    "tipo": "lector",
+    "carnet": "2026-0103",
+    "nombre": "Ana Lucía Pérez",
+    "documento": "2456789030101",
+    "correo": "ana.perez@ejemplo.com",
+    "telefono": "55123403",
+    "fechaRegistro": "2026-08-03T00:00:00",
+    "activo": true,
+    "id": 3
+  },
+  {
+    "tipo": "lector",
+    "carnet": "2026-0104",
+    "nombre": "José Andrés Ramírez",
+    "documento": "2456789040101",
+    "correo": "jose.ramirez@ejemplo.com",
+    "telefono": "55123404",
+    "fechaRegistro": "2026-08-03T00:00:00",
+    "activo": true,
+    "id": 4
+  },
+  {
+    "tipo": "lector",
+    "carnet": "2026-0105",
+    "nombre": "Sofía Gabriela Castillo",
+    "documento": "2456789050101",
+    "correo": "sofia.castillo@ejemplo.com",
+    "telefono": "55123405",
+    "fechaRegistro": "2026-08-03T00:00:00",
+    "activo": true,
+    "id": 5
+  },
+  {
+    "tipo": "lector",
+    "carnet": "2026-0106",
+    "nombre": "Luis Eduardo Morales",
+    "documento": "2456789060101",
+    "correo": "luis.morales@ejemplo.com",
+    "telefono": "55123406",
+    "fechaRegistro": "2026-08-03T00:00:00",
+    "activo": true,
+    "id": 6
+  },
+  {
+    "tipo": "bibliotecario",
+    "cargo": "Encargada de préstamos",
+    "nombre": "Rosa Elena Hernández",
+    "documento": "2456789070101",
+    "correo": "rosa.hernandez@ejemplo.com",
+    "telefono": "55123407",
+    "fechaRegistro": "2026-08-03T00:00:00",
+    "activo": true,
+    "id": 7
+  },
+  {
+    "tipo": "bibliotecario",
+    "cargo": "Jefe de biblioteca",
+    "nombre": "Marco Antonio Ordóñez",
+    "documento": "2456789080101",
+    "correo": "marco.ordonez@ejemplo.com",
+    "telefono": "55123408",
+    "fechaRegistro": "2026-08-03T00:00:00",
+    "activo": true,
+    "id": 8
+  }
+]
