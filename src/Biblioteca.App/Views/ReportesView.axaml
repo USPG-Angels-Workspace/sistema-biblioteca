@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Biblioteca.App.Views.ReportesView">
+  <Grid RowDefinitions="Auto,Auto,*,Auto">
+    <StackPanel Grid.Row="0" Spacing="2" Margin="0,0,0,16">
+      <TextBlock Classes="titulo" Text="Reportes" />
+      <TextBlock Classes="subtitulo" Text="Libros disponibles, préstamos activos, libros atrasados, usuarios y multas." />
+    </StackPanel>
+
+    <Grid Grid.Row="1" ColumnDefinitions="320,Auto" Margin="0,0,0,12">
+      <ComboBox x:Name="ComboReporte" HorizontalAlignment="Stretch" SelectionChanged="Reporte_Cambio" />
+      <Button Grid.Column="1" Margin="8,0,0,0" Classes="secundario" Content="Exportar a CSV" Click="Exportar_Click" />
+    </Grid>
+
+    <Border Grid.Row="2" Classes="card" Padding="0" ClipToBounds="True">
+      <DataGrid x:Name="Tabla" AutoGenerateColumns="False" IsReadOnly="True"
+                GridLinesVisibility="Horizontal" CanUserSortColumns="True" CanUserResizeColumns="True" />
+    </Border>
+
+    <TextBlock Grid.Row="3" x:Name="Resumen" Margin="0,12,0,0" FontWeight="SemiBold" Foreground="#14293D" TextWrapping="Wrap" />
+  </Grid>
+</UserControl>
