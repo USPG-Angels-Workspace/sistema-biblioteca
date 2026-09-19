@@ -15,6 +15,7 @@ public abstract class Persona : EntidadBase
     [JsonInclude] public DateTime FechaRegistro { get; private set; }
     [JsonInclude] public bool Activo { get; private set; } = true;
 
+    [JsonIgnore] public string EstadoTexto => Activo ? "Activo" : "Inactivo";
     [JsonIgnore] public abstract string TipoUsuario { get; }
     [JsonIgnore] public abstract string EtiquetaDetalle { get; }
     [JsonIgnore] public abstract string Detalle { get; }

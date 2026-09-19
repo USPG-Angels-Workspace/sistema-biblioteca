@@ -16,6 +16,7 @@ public class Libro : EntidadBase
 
     [JsonIgnore] public bool Disponible => CopiasDisponibles > 0;
     [JsonIgnore] public int CopiasPrestadas => CopiasTotales - CopiasDisponibles;
+    [JsonIgnore] public string EstadoTexto => Disponible ? "Disponible" : "Sin ejemplares";
 
     [JsonConstructor]
     private Libro() { }
