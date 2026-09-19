@@ -29,7 +29,7 @@ public class ReporteService
     {
         var libros = _libros.ObtenerTodos().Where(l => l.Disponible)
             .OrderBy(l => l.Titulo, StringComparer.CurrentCultureIgnoreCase).ToList();
-        var filas = libros.Select(l => Fila(l.Isbn, l.Titulo, l.Autor, l.Categoria.ToString(),
+        var filas = libros.Select(l => Fila(l.Isbn, l.Titulo, l.Autor, l.CategoriaTexto,
                                             $"{l.CopiasDisponibles} de {l.CopiasTotales}")).ToList();
         return new ReporteTabular("Libros disponibles",
             new[] { "ISBN", "Título", "Autor", "Categoría", "Ejemplares disponibles" },
