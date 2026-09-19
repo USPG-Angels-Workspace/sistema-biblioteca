@@ -60,15 +60,16 @@ public class PersistenciaTests : IDisposable
     }
 
     [Fact]
-    public void Los_ids_continuan_despues_de_reabrir_y_no_se_reutilizan()
+    public void Los_ids_nuevos_toman_el_maximo_existente_mas_uno_despues_de_reabrir()
     {
         _e.NuevoLibro();
         var segundo = _e.NuevoLibro();
+        _e.NuevoLibro();
         _e.Sistema.Libros.Eliminar(segundo.Id);
 
-        var tercero = _e.Reabrir().Libros.Registrar("9789929000099", "Nuevo", "A", "E", 2020, CategoriaLibro.Otros, 1);
+        var nuevo = _e.Reabrir().Libros.Registrar("9789929000099", "Nuevo", "A", "E", 2020, CategoriaLibro.Otros, 1);
 
-        Assert.Equal(2, tercero.Id);
+        Assert.Equal(4, nuevo.Id);
     }
 
     [Fact]
