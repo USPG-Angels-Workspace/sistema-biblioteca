@@ -6,11 +6,11 @@ public class Lector : Persona
 {
     [JsonInclude] public string Carnet { get; private set; } = string.Empty;
 
-    public override string TipoUsuario => "Lector";
-    public override string EtiquetaDetalle => "Carnet";
-    public override string Detalle => Carnet;
-    public override int LimitePrestamos => 3;
-    public override int DiasPrestamo => 7;
+    [JsonIgnore] public override string TipoUsuario => "Lector";
+    [JsonIgnore] public override string EtiquetaDetalle => "Carnet";
+    [JsonIgnore] public override string Detalle => Carnet;
+    [JsonIgnore] public override int LimitePrestamos => 3;
+    [JsonIgnore] public override int DiasPrestamo => 7;
 
     [JsonConstructor]
     private Lector() { }
