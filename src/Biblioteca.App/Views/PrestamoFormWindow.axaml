@@ -1,0 +1,32 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Biblioteca.App.Views.PrestamoFormWindow"
+        Title="Nuevo préstamo"
+        Width="600" SizeToContent="Height" CanResize="False"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Background="White">
+  <StackPanel Margin="28" Spacing="14">
+    <TextBlock Text="Nuevo préstamo" Classes="titulo" FontSize="22" />
+
+    <StackPanel>
+      <TextBlock Classes="etiqueta" Text="Usuario *" />
+      <ComboBox x:Name="ComboUsuario" HorizontalAlignment="Stretch" PlaceholderText="Seleccione un usuario activo"
+                SelectionChanged="Seleccion_Cambio" />
+    </StackPanel>
+    <StackPanel>
+      <TextBlock Classes="etiqueta" Text="Libro disponible *" />
+      <ComboBox x:Name="ComboLibro" HorizontalAlignment="Stretch" PlaceholderText="Seleccione un libro"
+                SelectionChanged="Seleccion_Cambio" />
+    </StackPanel>
+
+    <Border Classes="card" Background="#F4F8FC" Padding="12">
+      <TextBlock x:Name="Resumen" TextWrapping="Wrap" Foreground="#3B4756" Text="Seleccione el usuario y el libro para ver las condiciones del préstamo." />
+    </Border>
+
+    <TextBlock x:Name="MensajeError" Classes="error" TextWrapping="Wrap" IsVisible="False" />
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,6,0,0">
+      <Button Classes="secundario" Content="Cancelar" IsCancel="True" Click="Cancelar_Click" />
+      <Button Classes="primario" Content="Registrar préstamo" IsDefault="True" Click="Guardar_Click" />
+    </StackPanel>
+  </StackPanel>
+</Window>
