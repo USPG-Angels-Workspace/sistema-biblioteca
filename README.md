@@ -2,9 +2,19 @@
 
 [2do Semestre] Sistema de gestión de biblioteca - Programación II
 
-Proyecto Integrador de Programación II: aplicación de escritorio en **C# (.NET 8)** con interfaz gráfica (Avalonia), programación orientada a objetos y persistencia en **archivos JSON**. Fecha de presentación: 10 de octubre de 2026.
+Proyecto Integrador de Programación II (Universidad San Pablo de Guatemala): aplicación web en **C# con ASP.NET Core MVC**, interfaz con **Razor + Bootstrap**, programación orientada a objetos y persistencia en **archivos JSON** (sin base de datos).
 
-![Pantalla de inicio](docs/img/pantalla-inicio.png)
+![Panel de inicio](docs/img/pantalla-inicio.png)
+
+## Integrantes
+
+| Integrante | Carné |
+|---|---|
+| Angela María Cruz Cifuentes | 2600094 |
+| Carlos Fernando Villatoro López | 2600447 |
+| Angel Kaled Rodriguez Soc | 2600100 |
+
+Catedrático: Erik Arnulfo Santizo Bardales · Fecha de presentación: 10 de octubre de 2026.
 
 ## Funcionalidad
 
@@ -23,25 +33,34 @@ Reglas principales: un lector puede tener 3 préstamos por 7 días y un bibliote
 Requisitos: [.NET SDK 8](https://dotnet.microsoft.com/download) o superior (Windows, Linux o macOS).
 
 ```bash
-dotnet build Biblioteca.sln
-dotnet test tests/Biblioteca.Tests
-dotnet run --project src/Biblioteca.App
+dotnet run
 ```
 
-Al compilar, los archivos de `datos/` (datos de prueba) se copian junto al ejecutable. La aplicación guarda ahí los cambios; para usar otra carpeta se define la variable de entorno `BIBLIOTECA_DATOS`.
+Abrir en el navegador la dirección que muestra la consola (por defecto `http://localhost:5110`). Otros comandos:
 
-## Estructura
+```bash
+dotnet build Biblioteca.sln      # compilar todo
+dotnet test tests/Biblioteca.Tests   # 94 pruebas
+```
+
+La aplicación guarda los cambios en los archivos de `Data/`. Para volver a los datos de prueba originales: `git checkout Data`. Para usar otra carpeta se define `BIBLIOTECA_DATOS` (o la configuración `DataPath`).
+
+## Arquitectura (MVC)
 
 ```
-├── Biblioteca.sln
-├── datos/                 libros.json, usuarios.json, prestamos.json, multas.json (datos de prueba)
-├── docs/                  documento de análisis (PDF y fuentes), diagramas UML, imágenes y presentación
-├── src/
-│   ├── Biblioteca.Core/   modelos, servicios, políticas y repositorio JSON
-│   └── Biblioteca.App/    interfaz gráfica
-└── tests/
-    └── Biblioteca.Tests/  70 pruebas unitarias (xUnit)
+Biblioteca.Web.csproj      aplicación web ASP.NET Core MVC (creada con "dotnet new mvc")
+├── Program.cs             configuración: MVC, inyección de SistemaBiblioteca, cultura es-GT
+├── Controllers/           C: un controlador por módulo (Libros, Usuarios, Préstamos, Devoluciones, Multas, Reportes)
+├── Models/ViewModels/     modelos de vista: formularios con validación y listados
+├── Views/                 V: vistas Razor (.cshtml) con Bootstrap
+├── wwwroot/               estilos y Bootstrap
+├── Data/                  libros.json, usuarios.json, prestamos.json, multas.json (datos de prueba)
+├── src/Biblioteca.Core/   M: dominio, servicios, políticas y repositorio JSON
+├── tests/Biblioteca.Tests pruebas unitarias y de integración (xUnit)
+└── docs/                  documento de análisis (PDF y fuentes), diagramas UML, imágenes y presentación
 ```
+
+El **Modelo** vive en `Biblioteca.Core` (entidades como `Libro`, `Persona` → `Lector`/`Bibliotecario`, `Prestamo` y `Multa`, con sus servicios y el acceso a JSON detrás de `IRepositorio<T>`). Los **controladores** solo reciben la petición, llaman a los servicios y eligen la vista; las reglas de negocio no están en la interfaz.
 
 ## Documentación
 
