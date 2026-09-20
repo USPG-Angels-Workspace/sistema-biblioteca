@@ -1,0 +1,77 @@
+@*
+    Layout compartido: menu lateral con los modulos, mensajes de exito/error (TempData)
+    y el cuerpo de cada vista.
+*@
+@{
+    var controlador = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+
+    string Clase(string nombre) =>
+        controlador.Equals(nombre, StringComparison.OrdinalIgnoreCase) ? "nav-link activo" : "nav-link";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Biblioteca</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="icon" href="data:," />
+</head>
+<body>
+    <div class="app">
+        <aside class="menu">
+            <div class="menu-marca">
+                <span class="titulo">Biblioteca</span>
+                <span class="subtitulo">Sistema de gestión</span>
+            </div>
+            <nav class="nav flex-column gap-1">
+                <a class="@Clase("Home")" asp-controller="Home" asp-action="Index">Inicio</a>
+                <a class="@Clase("Libros")" asp-controller="Libros" asp-action="Index">Libros</a>
+                <a class="@Clase("Usuarios")" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                <a class="@Clase("Prestamos")" asp-controller="Prestamos" asp-action="Index">Préstamos</a>
+                <a class="@Clase("Devoluciones")" asp-controller="Devoluciones" asp-action="Index">Devoluciones</a>
+                <a class="@Clase("Multas")" asp-controller="Multas" asp-action="Index">Multas</a>
+                <a class="@Clase("Reportes")" asp-controller="Reportes" asp-action="Index">Reportes</a>
+            </nav>
+            <div class="menu-pie">Programación II · Proyecto 1</div>
+        </aside>
+
+        <main class="contenido">
+            <header class="mb-4 d-flex justify-content-between align-items-start gap-3">
+                <div>
+                    <h1 class="h3 mb-1">@ViewData["Title"]</h1>
+                    @if (ViewData["Descripcion"] is string descripcion)
+                    {
+                        <p class="text-secondary mb-0">@descripcion</p>
+                    }
+                </div>
+                @if (ViewData["AccionTexto"] is string accionTexto && ViewData["AccionUrl"] is string accionUrl)
+                {
+                    <a class="btn btn-primary text-nowrap" href="@accionUrl">@accionTexto</a>
+                }
+            </header>
+
+            @if (TempData["Mensaje"] is string mensajeExito)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @mensajeExito
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+            }
+            @if (TempData["Error"] is string mensajeError)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @mensajeError
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+            }
+
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

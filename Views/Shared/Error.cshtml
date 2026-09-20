@@ -1,0 +1,14 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="alert alert-danger">
+    <h2 class="h5">Ocurrió un error al procesar la solicitud.</h2>
+    <p class="mb-0">Vuelva al <a asp-controller="Home" asp-action="Index">inicio</a> e intente de nuevo.</p>
+</div>
+
+@if (Model.ShowRequestId)
+{
+    <p class="text-secondary small">Identificador de la solicitud: <code>@Model.RequestId</code></p>
+}
