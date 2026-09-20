@@ -64,7 +64,7 @@ El **Modelo** vive en `Biblioteca.Core` (entidades como `Libro`, `Persona` → `
 
 ## Documentación
 
-- [Documento de análisis (PDF, 8 páginas)](docs/Documento-de-Analisis.pdf) · fuente: [resumen.md](docs/resumen.md)
+- [Documento de análisis (PDF, formato APA 7, 12 páginas)](docs/Documento-de-Analisis.pdf) · fuente: [analisis-apa.md](docs/analisis-apa.md) · [versión resumida sin formato APA](docs/resumen.md)
 - Anexo con el detalle completo (especificación de cada caso de uso, todos los diagramas y capturas), en Markdown con diagramas Mermaid y SVG:
   [descripción y requisitos](docs/01-descripcion-y-requisitos.md) ·
   [casos de uso](docs/02-casos-de-uso.md) ·
@@ -74,7 +74,7 @@ El **Modelo** vive en `Biblioteca.Core` (entidades como `Libro`, `Persona` → `
 
 ## Trazabilidad
 
-Problema → Requisitos → UML → Clases → Código C# → Interfaz → Archivos → Pruebas. La matriz completa está en el capítulo 9 del documento de análisis.
+Problema → Requisitos → UML → Clases → Código C# → Interfaz → Archivos → Pruebas. La matriz completa está en la Tabla 5 del documento de análisis.
 
 ## Convención de commits
 
