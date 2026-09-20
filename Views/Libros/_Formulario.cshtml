@@ -3,58 +3,58 @@
     Formulario compartido de alta y edicion de libros. Los errores de validacion y de
     reglas de negocio se muestran arriba del formulario.
 *@
-<div class="tarjeta max-w-3xl p-6 sm:p-8">
-    <form method="post" novalidate>
-        <input type="hidden" asp-for="Id" />
-        <div asp-validation-summary="All" class="resumen-errores"></div>
+<form method="post" novalidate class="max-w-2xl">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="resumen-errores"></div>
 
-        <div class="grid gap-5 sm:grid-cols-6">
-            <div class="sm:col-span-3">
-                <label asp-for="Isbn" class="etiqueta"></label>
-                <input asp-for="Isbn" class="input" placeholder="978-9929-00-001-1" maxlength="20" />
-                <span asp-validation-for="Isbn" class="error-campo"></span>
-            </div>
-            <div class="sm:col-span-6">
-                <label asp-for="Titulo" class="etiqueta"></label>
-                <input asp-for="Titulo" class="input" maxlength="120" />
-                <span asp-validation-for="Titulo" class="error-campo"></span>
-            </div>
-            <div class="sm:col-span-3">
-                <label asp-for="Autor" class="etiqueta"></label>
-                <input asp-for="Autor" class="input" maxlength="120" />
-                <span asp-validation-for="Autor" class="error-campo"></span>
-            </div>
-            <div class="sm:col-span-3">
-                <label asp-for="Editorial" class="etiqueta"></label>
-                <input asp-for="Editorial" class="input" maxlength="120" />
-                <span asp-validation-for="Editorial" class="error-campo"></span>
-            </div>
-            <div class="sm:col-span-2">
-                <label asp-for="Anio" class="etiqueta"></label>
-                <input asp-for="Anio" type="number" class="input" />
-                <span asp-validation-for="Anio" class="error-campo"></span>
-            </div>
-            <div class="sm:col-span-2">
-                <label asp-for="Categoria" class="etiqueta"></label>
-                <select asp-for="Categoria" class="input" asp-items="Listas.Categorias()"></select>
-            </div>
-            <div class="sm:col-span-2">
-                <label asp-for="Copias" class="etiqueta"></label>
-                <input asp-for="Copias" type="number" class="input" />
-                <span asp-validation-for="Copias" class="error-campo"></span>
-            </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+        <div class="sm:col-span-2">
+            <label asp-for="Titulo" class="etiqueta"></label>
+            <input asp-for="Titulo" class="input" maxlength="120" />
+            <span asp-validation-for="Titulo" class="error-campo"></span>
         </div>
-
-        @if (Model.Id > 0)
-        {
-            <p class="mt-5 rounded-lg bg-slate-50 px-4 py-3 text-sm text-slate-600">
-                Ejemplares en préstamo actualmente: <strong>@Model.CopiasPrestadas</strong>. El total no puede ser menor.
-            </p>
-        }
-
-        <div class="mt-8 flex gap-3 border-t border-slate-100 pt-6">
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+        <div>
+            <label asp-for="Autor" class="etiqueta"></label>
+            <input asp-for="Autor" class="input" maxlength="120" />
+            <span asp-validation-for="Autor" class="error-campo"></span>
         </div>
-    </form>
-</div>
+        <div>
+            <label asp-for="Editorial" class="etiqueta"></label>
+            <input asp-for="Editorial" class="input" maxlength="120" />
+            <span asp-validation-for="Editorial" class="error-campo"></span>
+        </div>
+        <div>
+            <label asp-for="Isbn" class="etiqueta"></label>
+            <input asp-for="Isbn" class="input" placeholder="978-9929-00-001-1" maxlength="20" />
+            <span class="ayuda">De 10 o 13 dígitos; los guiones son opcionales.</span>
+            <span asp-validation-for="Isbn" class="error-campo"></span>
+        </div>
+        <div>
+            <label asp-for="Categoria" class="etiqueta"></label>
+            <select asp-for="Categoria" class="input" asp-items="Listas.Categorias()"></select>
+        </div>
+        <div>
+            <label asp-for="Anio" class="etiqueta"></label>
+            <input asp-for="Anio" type="number" class="input" />
+            <span asp-validation-for="Anio" class="error-campo"></span>
+        </div>
+        <div>
+            <label asp-for="Copias" class="etiqueta"></label>
+            <input asp-for="Copias" type="number" class="input" />
+            <span class="ayuda">Cuántas copias tiene la biblioteca en total.</span>
+            <span asp-validation-for="Copias" class="error-campo"></span>
+        </div>
+    </div>
+
+    @if (Model.Id > 0)
+    {
+        <p class="mt-5 rounded-md border border-ambar/30 bg-ambar-claro px-3.5 py-2.5">
+            Ahora hay <strong>@Model.CopiasPrestadas</strong> @(Model.CopiasPrestadas == 1 ? "ejemplar prestado" : "ejemplares prestados"). El total no puede ser menor.
+        </p>
+    }
+
+    <div class="mt-6 flex gap-2 border-t border-linea pt-5">
+        <button type="submit" class="btn btn-primary">@(Model.Id > 0 ? "Guardar cambios" : "Registrar libro")</button>
+        <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+    </div>
+</form>
