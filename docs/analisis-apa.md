@@ -431,11 +431,11 @@ La Tabla 5 relaciona cada módulo con sus requisitos, casos de uso, clases, cont
 
 | Módulo | Requisitos y casos de uso | Clases | Controlador | Archivo | Pruebas |
 |---|---|---|---|---|---|
-| Libros | RF-01 a 07; CU-01 a 04 | `Libro`, `LibroService` | `LibrosController` | `libros.json` | `LibroTests`, `LibroServiceTests` |
-| Usuarios | RF-08 a 11; CU-05 a 08 | `Persona`, `Lector`, `Bibliotecario`, `UsuarioService` | `UsuariosController` | `usuarios.json` | `PersonaTests`, `UsuarioServiceTests` |
-| Préstamos | RF-12 a 17; CU-09 a 11 y 18 | `Prestamo`, `PrestamoService` | `PrestamosController` | `prestamos.json` | `PrestamoTests`, `PrestamoFlujoTests` |
-| Devoluciones y multas | RF-18 a 22; CU-12 a 16 | `DevolucionService`, `MultaService`, `Multa` | `DevolucionesController`, `MultasController` | `multas.json` | `MultaTests`, `PrestamoFlujoTests` |
-| Reportes | RF-23 a 28; CU-17 | `ReporteService` | `ReportesController` | Los cuatro archivos | `ReporteServiceTests` |
+| Libros | RF-01 a 07<br>CU-01 a 04 | `Libro`, `LibroService` | `LibrosController` | `libros.json` | `LibroTests`, `LibroServiceTests` |
+| Usuarios | RF-08 a 11<br>CU-05 a 08 | `Persona`, `Lector`, `Bibliotecario`, `UsuarioService` | `UsuariosController` | `usuarios.json` | `PersonaTests`, `UsuarioServiceTests` |
+| Préstamos | RF-12 a 17<br>CU-09 a 11 y 18 | `Prestamo`, `PrestamoService` | `PrestamosController` | `prestamos.json` | `PrestamoTests`, `PrestamoFlujoTests` |
+| Devoluciones y multas | RF-18 a 22<br>CU-12 a 16 | `DevolucionService`, `MultaService`, `Multa` | `DevolucionesController`, `MultasController` | `multas.json` | `MultaTests`, `PrestamoFlujoTests` |
+| Reportes | RF-23 a 28<br>CU-17 | `ReporteService` | `ReportesController` | Los cuatro archivos | `ReporteServiceTests` |
 | Persistencia e interfaz | RF-29 a 34 | `RepositorioJson<T>`, `BaseController` | Diseño general y formularios | `Data/*.json` | `PersistenciaTests`, `WebTests` |
 
 *Nota.* Elaboración propia.
