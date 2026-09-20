@@ -268,6 +268,81 @@ classDiagram
     MultaService ..> ICalculadoraMulta
 ```
 
+### Capa web (controladores)
+
+Cada controlador recibe `SistemaBiblioteca` por inyección de dependencias, llama a sus servicios y elige la vista. `BaseController` concentra el manejo de las excepciones de negocio y de archivos.
+
+```mermaid
+classDiagram
+    direction LR
+
+    class Controller {
+        <<ASP.NET Core>>
+    }
+    class BaseController {
+        <<abstract>>
+        #Ejecutar(accion) bool
+        #EjecutarConAviso(accion) bool
+    }
+    class HomeController {
+        +Index() IActionResult
+        +Error() IActionResult
+    }
+    class LibrosController {
+        +Index(q, categoria, soloDisponibles)
+        +Crear(modelo)
+        +Editar(modelo)
+        +Eliminar(id)
+    }
+    class UsuariosController {
+        +Index(q, tipo)
+        +Crear(modelo)
+        +Editar(modelo)
+        +Eliminar(id)
+    }
+    class PrestamosController {
+        +Index(q, estado)
+        +Nuevo(modelo)
+        +Renovar(id)
+    }
+    class DevolucionesController {
+        +Index(q)
+        +Registrar(id)
+    }
+    class MultasController {
+        +Index(q, estado)
+        +Pagar(id)
+    }
+    class ReportesController {
+        +Index(id)
+        +Exportar(id) FileResult
+    }
+    class SistemaBiblioteca
+    class LibroFormViewModel
+    class UsuarioFormViewModel
+    class PrestamoNuevoViewModel
+
+    Controller <|-- BaseController
+    Controller <|-- HomeController
+    Controller <|-- ReportesController
+    BaseController <|-- LibrosController
+    BaseController <|-- UsuariosController
+    BaseController <|-- PrestamosController
+    BaseController <|-- DevolucionesController
+    BaseController <|-- MultasController
+
+    LibrosController ..> SistemaBiblioteca
+    UsuariosController ..> SistemaBiblioteca
+    PrestamosController ..> SistemaBiblioteca
+    DevolucionesController ..> SistemaBiblioteca
+    MultasController ..> SistemaBiblioteca
+    ReportesController ..> SistemaBiblioteca
+    HomeController ..> SistemaBiblioteca
+    LibrosController ..> LibroFormViewModel
+    UsuariosController ..> UsuarioFormViewModel
+    PrestamosController ..> PrestamoNuevoViewModel
+```
+
 ## 5.3 Diagramas de secuencia
 
 ### Registrar un préstamo (CU-09)
@@ -276,7 +351,8 @@ classDiagram
 sequenceDiagram
     autonumber
     actor B as Bibliotecario
-    participant UI as PrestamoFormWindow
+    participant V as Vista Prestamos/Nuevo
+    participant C as PrestamosController
     participant PS as PrestamoService
     participant LR as Repositorio de libros
     participant UR as Repositorio de usuarios
@@ -284,15 +360,16 @@ sequenceDiagram
     participant PR as Repositorio de préstamos
     participant J as Archivos JSON
 
-    B->>UI: elige usuario y libro, pulsa "Registrar préstamo"
-    UI->>PS: Prestar(libroId, usuarioId)
+    B->>V: elige usuario y libro, pulsa "Registrar préstamo"
+    V->>C: POST /Prestamos/Nuevo (con token antiforgery)
+    C->>PS: Prestar(libroId, usuarioId)
     PS->>LR: ObtenerPorId(libroId)
     PS->>UR: ObtenerPorId(usuarioId)
     PS->>MR: ObtenerTodos() para multas pendientes
     PS->>PR: ObtenerTodos() para préstamos del usuario
     alt incumple una regla (inactivo, multa, atraso, límite, duplicado o sin ejemplares)
-        PS-->>UI: ValidacionException(mensaje)
-        UI-->>B: muestra el mensaje de error
+        PS-->>C: ValidacionException(mensaje)
+        C-->>B: vuelve a mostrar el formulario con el error
     else cumple todas las reglas
         PS->>PS: crea Prestamo(hoy + días del tipo de usuario)
         PS->>LR: libro.PrestarCopia()
@@ -300,8 +377,8 @@ sequenceDiagram
         PR->>J: escribe prestamos.json
         PS->>LR: Actualizar(libro)
         LR->>J: escribe libros.json
-        PS-->>UI: Prestamo
-        UI-->>B: confirma con la fecha de devolución
+        PS-->>C: Prestamo
+        C-->>B: redirige a /Prestamos con la confirmación y la fecha de devolución
     end
 ```
 
@@ -311,31 +388,33 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor B as Bibliotecario
-    participant UI as DevolucionesView
+    participant V as Vista Devoluciones/Index
+    participant C as DevolucionesController
     participant DS as DevolucionService
     participant P as Prestamo
     participant L as Libro
     participant MS as MultaService
-    participant C as ICalculadoraMulta
+    participant K as ICalculadoraMulta
     participant J as Archivos JSON
 
-    B->>UI: selecciona el préstamo y pulsa "Registrar devolución"
-    UI-->>B: pide confirmación (muestra la multa estimada)
-    B->>UI: confirma
-    UI->>DS: Registrar(prestamoId)
+    B->>V: pulsa "Registrar devolución" en el préstamo
+    V-->>B: confirmación del navegador (muestra la multa estimada)
+    B->>V: acepta
+    V->>C: POST /Devoluciones/Registrar/{id}
+    C->>DS: Registrar(prestamoId)
     DS->>P: RegistrarDevolucion(hoy)
     DS->>L: DevolverCopia()
     DS->>J: guarda prestamos.json y libros.json
     DS->>MS: GenerarPorDevolucion(prestamo)
     MS->>P: DiasAtraso(hoy)
     opt días de atraso mayores que cero
-        MS->>C: Calcular(dias)
-        C-->>MS: monto (Q2.00 por día, máximo Q100.00)
+        MS->>K: Calcular(dias)
+        K-->>MS: monto (Q2.00 por día, máximo Q100.00)
         MS->>J: guarda la multa en multas.json
     end
     MS-->>DS: Multa o nulo
-    DS-->>UI: ResultadoDevolucion
-    UI-->>B: informa la devolución y la multa generada
+    DS-->>C: ResultadoDevolucion
+    C-->>B: redirige a /Devoluciones e informa la devolución y la multa generada
 ```
 
 ### Guardar y recuperar información (persistencia)
@@ -343,23 +422,23 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     autonumber
-    participant App as Aplicación
+    participant App as Program.cs
     participant SB as SistemaBiblioteca
     participant R as RepositorioJson
     participant F as libros.json
 
-    Note over App,F: Al iniciar la aplicación
+    Note over App,F: Al iniciar la aplicación web
     App->>SB: new SistemaBiblioteca(carpetaDatos)
     SB->>R: new RepositorioJson(ruta)
     R->>F: lee y deserializa el archivo
     alt archivo dañado
         R-->>App: AlmacenamientoException
-        App-->>App: muestra el error y no abre el sistema
+        App-->>App: la aplicación no inicia y muestra el error
     else archivo válido o inexistente
         R-->>SB: colección en memoria
     end
 
-    Note over App,F: Al registrar, editar o eliminar
+    Note over App,F: Al registrar, editar o eliminar (desde un controlador)
     App->>R: Agregar / Actualizar / Eliminar
     R->>F: escribe libros.json.tmp
     R->>F: reemplaza libros.json por el temporal
@@ -394,26 +473,28 @@ stateDiagram-v2
 
 ## 5.6 Arquitectura de la solución
 
-La solución está dividida en tres proyectos con dependencias en un solo sentido (interfaz → lógica). La lógica no conoce la interfaz, por eso se puede probar de forma automática.
+La aplicación sigue el patrón **MVC** de ASP.NET Core. El **Modelo** es la biblioteca `Biblioteca.Core` (dominio, servicios y archivos JSON); los **Controladores** reciben las peticiones del navegador, llaman a los servicios y eligen la vista; las **Vistas** son páginas Razor con Bootstrap. Las dependencias van en un solo sentido (web → Core): el Modelo no conoce la web, por eso se puede probar de forma automática.
 
 ```mermaid
 flowchart TB
-    subgraph APP["Biblioteca.App · Presentación (Avalonia)"]
+    N(["Navegador · Bibliotecario"])
+
+    subgraph WEB["Biblioteca.Web · ASP.NET Core MVC"]
         direction LR
-        V1[MainWindow]
-        V2[Vistas: Libros, Usuarios, Préstamos, Devoluciones, Reportes]
-        V3[Formularios y diálogos]
+        C["Controladores<br/>Libros, Usuarios, Préstamos,<br/>Devoluciones, Multas, Reportes"]
+        VM["Modelos de vista<br/>(formularios y listados)"]
+        V["Vistas Razor<br/>+ Bootstrap"]
     end
 
-    subgraph CORE["Biblioteca.Core · Lógica y dominio"]
+    subgraph CORE["Biblioteca.Core · Modelo"]
         direction LR
         S[Servicios]
-        M[Modelos]
+        M[Modelos de dominio]
         P[Políticas: multa y reloj]
         R[RepositorioJson]
     end
 
-    subgraph DATA["Archivos JSON · carpeta datos"]
+    subgraph DATA["Archivos JSON · carpeta Data"]
         direction LR
         F1[(libros.json)]
         F2[(usuarios.json)]
@@ -421,12 +502,17 @@ flowchart TB
         F4[(multas.json)]
     end
 
-    T["Biblioteca.Tests · pruebas xUnit"]
+    T["Biblioteca.Tests · 94 pruebas xUnit"]
 
-    APP -->|usa SistemaBiblioteca| S
+    N -->|"petición HTTP"| C
+    C --> VM
+    C --> V
+    V -->|"HTML"| N
+    C -->|"usa SistemaBiblioteca"| S
     S --> M
     S --> P
     S --> R
     R --> F1 & F2 & F3 & F4
-    T -.->|prueba| CORE
+    T -.->|"prueba"| CORE
+    T -.->|"prueba"| WEB
 ```
