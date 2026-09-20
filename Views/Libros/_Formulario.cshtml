@@ -1,0 +1,58 @@
+@model LibroFormViewModel
+@*
+    Formulario compartido de alta y edicion de libros. Los errores de validacion y de
+    reglas de negocio se muestran arriba del formulario.
+*@
+<div class="tarjeta p-4 form-tarjeta">
+    <form method="post" novalidate>
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="All" class="alert alert-danger py-2"></div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Isbn" class="form-label"></label>
+                <input asp-for="Isbn" class="form-control" placeholder="978-9929-00-001-1" maxlength="20" />
+                <span asp-validation-for="Isbn" class="text-danger small"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Titulo" class="form-label"></label>
+                <input asp-for="Titulo" class="form-control" maxlength="120" />
+                <span asp-validation-for="Titulo" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Autor" class="form-label"></label>
+                <input asp-for="Autor" class="form-control" maxlength="120" />
+                <span asp-validation-for="Autor" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Editorial" class="form-label"></label>
+                <input asp-for="Editorial" class="form-control" maxlength="120" />
+                <span asp-validation-for="Editorial" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Anio" class="form-label"></label>
+                <input asp-for="Anio" type="number" class="form-control" />
+                <span asp-validation-for="Anio" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Categoria" class="form-label"></label>
+                <select asp-for="Categoria" class="form-select" asp-items="Listas.Categorias()"></select>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Copias" class="form-label"></label>
+                <input asp-for="Copias" type="number" class="form-control" />
+                <span asp-validation-for="Copias" class="text-danger small"></span>
+            </div>
+        </div>
+
+        @if (Model.Id > 0)
+        {
+            <p class="text-secondary small mt-3 mb-0">Ejemplares en préstamo actualmente: @Model.CopiasPrestadas. El total no puede ser menor.</p>
+        }
+
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+        </div>
+    </form>
+</div>

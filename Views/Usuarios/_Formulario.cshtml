@@ -1,0 +1,73 @@
+@model UsuarioFormViewModel
+@*
+    Formulario compartido de alta y edicion de usuarios. El tipo solo se elige al crear;
+    la etiqueta del ultimo campo cambia entre Carnet (lector) y Cargo (bibliotecario).
+*@
+@{
+    var editando = Model.Id > 0;
+}
+<div class="tarjeta p-4 form-tarjeta">
+    <form method="post" novalidate>
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="All" class="alert alert-danger py-2"></div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Tipo" class="form-label">Tipo de usuario</label>
+                @if (editando)
+                {
+                    <input type="hidden" asp-for="Tipo" />
+                    <input class="form-control" value="@Model.Tipo" disabled />
+                }
+                else
+                {
+                    <select asp-for="Tipo" class="form-select" id="tipoUsuario">
+                        <option value="Lector">Lector</option>
+                        <option value="Bibliotecario">Bibliotecario</option>
+                    </select>
+                }
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Detalle" class="form-label" id="etiquetaDetalle">@(Model.Tipo == "Bibliotecario" ? "Cargo" : "Carnet")</label>
+                <input asp-for="Detalle" class="form-control" maxlength="60" />
+                <span asp-validation-for="Detalle" class="text-danger small"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Nombre" class="form-label"></label>
+                <input asp-for="Nombre" class="form-control" maxlength="120" />
+                <span asp-validation-for="Nombre" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Documento" class="form-label"></label>
+                <input asp-for="Documento" class="form-control" placeholder="13 dígitos" maxlength="20" />
+                <span asp-validation-for="Documento" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Telefono" class="form-label"></label>
+                <input asp-for="Telefono" class="form-control" maxlength="20" />
+                <span asp-validation-for="Telefono" class="text-danger small"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Correo" class="form-label"></label>
+                <input asp-for="Correo" type="email" class="form-control" maxlength="120" />
+                <span asp-validation-for="Correo" class="text-danger small"></span>
+            </div>
+            @if (editando)
+            {
+                <div class="col-12 form-check ms-2">
+                    <input asp-for="Activo" class="form-check-input" />
+                    <label asp-for="Activo" class="form-check-label">Usuario activo (puede solicitar préstamos)</label>
+                </div>
+            }
+        </div>
+
+        <p class="text-secondary small mt-3 mb-0" id="reglasTipo">
+            @(Model.Tipo == "Bibliotecario" ? "Bibliotecario: hasta 5 libros a la vez, con 14 días de préstamo." : "Lector: hasta 3 libros a la vez, con 7 días de préstamo.")
+        </p>
+
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,22 @@
+@model UsuarioFormViewModel
+@{
+    ViewData["Title"] = "Nuevo usuario";
+}
+<partial name="_Formulario" model="Model" />
+
+@section Scripts {
+    <script>
+        const tipo = document.getElementById('tipoUsuario');
+        if (tipo) {
+            const actualizar = () => {
+                const bibliotecario = tipo.value === 'Bibliotecario';
+                document.getElementById('etiquetaDetalle').textContent = bibliotecario ? 'Cargo' : 'Carnet';
+                document.getElementById('reglasTipo').textContent = bibliotecario
+                    ? 'Bibliotecario: hasta 5 libros a la vez, con 14 días de préstamo.'
+                    : 'Lector: hasta 3 libros a la vez, con 7 días de préstamo.';
+            };
+            tipo.addEventListener('change', actualizar);
+            actualizar();
+        }
+    </script>
+}
