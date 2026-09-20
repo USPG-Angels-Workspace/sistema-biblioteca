@@ -1,0 +1,11 @@
+@model IEnumerable<(string Texto, string Url, bool Activa)>
+@*
+    Pestanas de filtro: cada una es un enlace que conserva la busqueda escrita.
+    La pestana activa lleva el subrayado en el color de acento.
+*@
+<nav class="flex flex-wrap gap-x-6" aria-label="Filtrar lista">
+    @foreach (var (texto, url, activa) in Model)
+    {
+        <a class="pestana @(activa ? "pestana-activa" : "")" href="@url" aria-current="@(activa ? "true" : null)">@texto</a>
+    }
+</nav>
