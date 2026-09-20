@@ -4,44 +4,49 @@
     ViewData["Descripcion"] = "Seleccione el usuario y el libro; el sistema valida todas las reglas al registrar.";
 }
 
-<div class="tarjeta p-4 form-tarjeta">
+<div class="tarjeta max-w-3xl p-6 sm:p-8">
     <form method="post" novalidate>
-        <div asp-validation-summary="All" class="alert alert-danger py-2"></div>
+        <div asp-validation-summary="All" class="resumen-errores"></div>
 
-        <div class="mb-3">
-            <label asp-for="UsuarioId" class="form-label"></label>
-            <select asp-for="UsuarioId" class="form-select" id="usuario">
-                <option value="">Seleccione un usuario activo</option>
-                @foreach (var u in Model.Usuarios)
-                {
-                    <option value="@u.Id" selected="@(Model.UsuarioId == u.Id)"
-                            data-tipo="@u.TipoUsuario" data-plazo="@u.DiasPrestamo" data-limite="@u.LimitePrestamos"
-                            data-activos="@Model.PrestamosActivos.GetValueOrDefault(u.Id)"
-                            data-multa="@Model.MultasPendientes.GetValueOrDefault(u.Id).ToString("N2")">
-                        @u.Nombre · @u.TipoUsuario (@u.EtiquetaDetalle: @u.Detalle)
-                    </option>
-                }
-            </select>
-            <span asp-validation-for="UsuarioId" class="text-danger small"></span>
+        <div class="space-y-5">
+            <div>
+                <label asp-for="UsuarioId" class="etiqueta"></label>
+                <select asp-for="UsuarioId" class="input" id="usuario">
+                    <option value="">Seleccione un usuario activo</option>
+                    @foreach (var u in Model.Usuarios)
+                    {
+                        <option value="@u.Id" selected="@(Model.UsuarioId == u.Id)"
+                                data-tipo="@u.TipoUsuario" data-plazo="@u.DiasPrestamo" data-limite="@u.LimitePrestamos"
+                                data-activos="@Model.PrestamosActivos.GetValueOrDefault(u.Id)"
+                                data-multa="@Model.MultasPendientes.GetValueOrDefault(u.Id).ToString("N2")">
+                            @u.Nombre · @u.TipoUsuario (@u.EtiquetaDetalle: @u.Detalle)
+                        </option>
+                    }
+                </select>
+                <span asp-validation-for="UsuarioId" class="error-campo"></span>
+            </div>
+
+            <div>
+                <label asp-for="LibroId" class="etiqueta"></label>
+                <select asp-for="LibroId" class="input" id="libro">
+                    <option value="">Seleccione un libro disponible</option>
+                    @foreach (var l in Model.Libros)
+                    {
+                        <option value="@l.Id" selected="@(Model.LibroId == l.Id)">@l.Titulo · @l.Autor (@l.CopiasDisponibles disp.)</option>
+                    }
+                </select>
+                <span asp-validation-for="LibroId" class="error-campo"></span>
+            </div>
+
+            <div class="flex items-start gap-3 rounded-lg border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm text-indigo-900">
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-indigo-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" /></svg>
+                <p id="resumen">Seleccione el usuario para ver las condiciones del préstamo.</p>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="LibroId" class="form-label"></label>
-            <select asp-for="LibroId" class="form-select" id="libro">
-                <option value="">Seleccione un libro disponible</option>
-                @foreach (var l in Model.Libros)
-                {
-                    <option value="@l.Id" selected="@(Model.LibroId == l.Id)">@l.Titulo · @l.Autor (@l.CopiasDisponibles disp.)</option>
-                }
-            </select>
-            <span asp-validation-for="LibroId" class="text-danger small"></span>
-        </div>
-
-        <div class="alert alert-primary py-2" id="resumen">Seleccione el usuario para ver las condiciones del préstamo.</div>
-
-        <div class="d-flex gap-2 mt-3">
+        <div class="mt-8 flex gap-3 border-t border-slate-100 pt-6">
             <button type="submit" class="btn btn-primary">Registrar préstamo</button>
-            <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+            <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
         </div>
     </form>
 </div>
