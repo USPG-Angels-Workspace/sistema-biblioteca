@@ -105,7 +105,7 @@ Solo se guardan los datos primarios: las propiedades calculadas (`LimitePrestamo
 
 # 8. Interfaz web
 
-La interfaz es una aplicación **ASP.NET Core MVC**: páginas Razor (`.cshtml`) con Bootstrap, que se abren desde el navegador. Las vistas no contienen lógica de negocio: los controladores llaman a los servicios y las vistas muestran el resultado. Cumple con lo mínimo solicitado:
+La interfaz es una aplicación **ASP.NET Core MVC**: páginas Razor (`.cshtml`) con Tailwind CSS (cargado por CDN), que se abren desde el navegador. Las vistas no contienen lógica de negocio: los controladores llaman a los servicios y las vistas muestran el resultado. Cumple con lo mínimo solicitado:
 
 | Requisito de interfaz | Cómo se cumple |
 |---|---|
@@ -113,11 +113,12 @@ La interfaz es una aplicación **ASP.NET Core MVC**: páginas Razor (`.cshtml`) 
 | Botones de navegación | El menú lateral, el botón **+ Nuevo** de cada módulo, los botones **Cancelar** y los accesos rápidos del inicio. |
 | Formularios de registro | Páginas de alta de libro, usuario y préstamo. |
 | Consulta de información | Tablas con búsqueda, filtros por categoría, tipo o estado, y resúmenes. |
-| Edición de información | Botón **Editar** en cada fila de libros y usuarios. |
-| Eliminación | Botón **Eliminar** en libros y usuarios, permitido solo sin historial. |
+| Edición de información | Botón de ícono **Editar** (lápiz) en cada fila de libros y usuarios. |
+| Eliminación | Botón de ícono **Eliminar** (papelera) en libros y usuarios, permitido solo sin historial. |
 | Mensajes de confirmación | Cuadro de confirmación del navegador antes de eliminar, renovar, devolver o cobrar; alerta verde de éxito después de cada operación. |
 | Mensajes de error | Alerta roja dentro del formulario con el motivo (validación o regla de negocio) y alerta roja tras una operación rechazada. |
 | Validación de datos | Campos obligatorios, formatos (ISBN, DPI, correo, teléfono), números, unicidad y reglas de negocio, siempre validados en el servidor. |
+| Interfaz clara y organizada | Diseño con menú lateral con íconos, tarjetas, tablas con insignias de estado, formularios en cuadrícula y alertas; se adapta a pantallas pequeñas (menú desplegable). |
 
 ### Inicio
 ![Panel de inicio](img/pantalla-inicio.png)
@@ -155,8 +156,17 @@ Los préstamos atrasados se resaltan en rojo y los devueltos en gris.
 
 ![Reporte de libros atrasados](img/pantalla-reporte-atrasados.png)
 
-### Mensaje de confirmación
-![Confirmación tras registrar un libro](img/libro-registrado.png)
+### Mensajes de confirmación y de error
+
+| Confirmación | Error |
+|---|---|
+| ![Confirmación tras registrar un libro](img/libro-registrado.png) | ![Error tras un intento de eliminar un libro con historial](img/mensaje-error.png) |
+
+### Diseño adaptable (móvil)
+
+| Listado | Menú desplegable |
+|---|---|
+| ![Listado en móvil](img/movil-libros.png) | ![Menú en móvil](img/movil-menu.png) |
 
 ---
 
@@ -247,7 +257,7 @@ sistema-biblioteca/
 ├── Controllers/               controladores MVC
 ├── Models/                    modelos de vista (ViewModels)
 ├── Views/                     vistas Razor (.cshtml)
-├── wwwroot/                   estilos y Bootstrap
+├── wwwroot/                   archivos estáticos (los estilos vienen de Tailwind por CDN)
 ├── Data/                      archivos JSON con los datos de prueba
 ├── docs/                      documento de análisis, diagramas, imágenes y presentación
 ├── src/
