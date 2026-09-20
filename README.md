@@ -10,8 +10,8 @@ Proyecto Integrador de Programación II (Universidad San Pablo de Guatemala): ap
 
 | Integrante | Carné |
 |---|---|
-| Angela María Cruz Cifuentes | 2600094 |
-| Carlos Fernando Villatoro López | 2600447 |
+| Angela María Cruz Cifuentes | 2600447 |
+| Carlos Fernando Villatoro López | 2600094 |
 | Angel Kaled Rodriguez Soc | 2600100 |
 
 Catedrático: Erik Arnulfo Santizo Bardales · Fecha de presentación: 10 de octubre de 2026.

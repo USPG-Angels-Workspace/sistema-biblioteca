@@ -13,8 +13,8 @@
 <table class="integrantes">
 <thead><tr><th>Integrante</th><th>Carné</th></tr></thead>
 <tbody>
-<tr><td>Angela María Cruz Cifuentes</td><td>2600094</td></tr>
-<tr><td>Carlos Fernando Villatoro López</td><td>2600447</td></tr>
+<tr><td>Angela María Cruz Cifuentes</td><td>2600447</td></tr>
+<tr><td>Carlos Fernando Villatoro López</td><td>2600094</td></tr>
 <tr><td>Angel Kaled Rodriguez Soc</td><td>2600100</td></tr>
 </tbody>
 </table>
