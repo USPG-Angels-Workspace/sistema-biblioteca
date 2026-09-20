@@ -2,7 +2,7 @@
 
 [2do Semestre] Sistema de gestión de biblioteca - Programación II
 
-Proyecto Integrador de Programación II (Universidad San Pablo de Guatemala): aplicación web en **C# con ASP.NET Core MVC**, interfaz con **Razor + Bootstrap**, programación orientada a objetos y persistencia en **archivos JSON** (sin base de datos).
+Proyecto Integrador de Programación II (Universidad San Pablo de Guatemala): aplicación web en **C# con ASP.NET Core MVC**, interfaz con **Razor + Tailwind CSS**, programación orientada a objetos y persistencia en **archivos JSON** (sin base de datos).
 
 ![Panel de inicio](docs/img/pantalla-inicio.png)
 
@@ -36,7 +36,7 @@ Requisitos: [.NET SDK 8](https://dotnet.microsoft.com/download) o superior (Wind
 dotnet run
 ```
 
-Abrir en el navegador la dirección que muestra la consola (por defecto `http://localhost:5110`). Otros comandos:
+Abrir en el navegador la dirección que muestra la consola (por defecto `http://localhost:5110`). **Se necesita conexión a internet**: los estilos (Tailwind CSS) y la tipografía se cargan por CDN. Otros comandos:
 
 ```bash
 dotnet build Biblioteca.sln      # compilar todo
@@ -52,8 +52,8 @@ Biblioteca.Web.csproj      aplicación web ASP.NET Core MVC (creada con "dotnet 
 ├── Program.cs             configuración: MVC, inyección de SistemaBiblioteca, cultura es-GT
 ├── Controllers/           C: un controlador por módulo (Libros, Usuarios, Préstamos, Devoluciones, Multas, Reportes)
 ├── Models/ViewModels/     modelos de vista: formularios con validación y listados
-├── Views/                 V: vistas Razor (.cshtml) con Bootstrap
-├── wwwroot/               estilos y Bootstrap
+├── Views/                 V: vistas Razor (.cshtml) con Tailwind CSS
+├── wwwroot/               archivos estáticos (favicon)
 ├── Data/                  libros.json, usuarios.json, prestamos.json, multas.json (datos de prueba)
 ├── src/Biblioteca.Core/   M: dominio, servicios, políticas y repositorio JSON
 ├── tests/Biblioteca.Tests pruebas unitarias y de integración (xUnit)

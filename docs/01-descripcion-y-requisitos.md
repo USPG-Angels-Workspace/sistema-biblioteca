@@ -63,6 +63,7 @@ El sistema cubre los cinco módulos definidos en el enunciado del proyecto:
 - **Una sola instancia:** los archivos JSON se cargan en memoria al iniciar; no se deben ejecutar dos instancias de la aplicación sobre los mismos archivos.
 - **Sin autenticación:** la aplicación la opera el personal de la biblioteca; no hay inicio de sesión ni roles con permisos diferenciados.
 - **Peticiones en serie:** la aplicación web atiende una petición a la vez para proteger los archivos JSON; no está pensada para muchos usuarios simultáneos.
+- **Requiere internet para los estilos:** Tailwind CSS y la tipografía se cargan por CDN.
 - **Sin reservas de libros ni notificaciones** (correo o SMS) de vencimiento.
 - **Un catálogo por título:** los ejemplares de un mismo libro se manejan como una cantidad (total y disponibles), no como copias individuales con código propio.
 - **Multas con una única política** (tarifa lineal por día con tope); la política es intercambiable por código (interfaz `ICalculadoraMulta`), pero no es configurable desde la interfaz.

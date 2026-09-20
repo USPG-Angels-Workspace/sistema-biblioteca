@@ -473,7 +473,7 @@ stateDiagram-v2
 
 ## 5.6 Arquitectura de la solución
 
-La aplicación sigue el patrón **MVC** de ASP.NET Core. El **Modelo** es la biblioteca `Biblioteca.Core` (dominio, servicios y archivos JSON); los **Controladores** reciben las peticiones del navegador, llaman a los servicios y eligen la vista; las **Vistas** son páginas Razor con Bootstrap. Las dependencias van en un solo sentido (web → Core): el Modelo no conoce la web, por eso se puede probar de forma automática.
+La aplicación sigue el patrón **MVC** de ASP.NET Core. El **Modelo** es la biblioteca `Biblioteca.Core` (dominio, servicios y archivos JSON); los **Controladores** reciben las peticiones del navegador, llaman a los servicios y eligen la vista; las **Vistas** son páginas Razor con Tailwind CSS. Las dependencias van en un solo sentido (web → Core): el Modelo no conoce la web, por eso se puede probar de forma automática.
 
 ```mermaid
 flowchart TB
@@ -483,7 +483,7 @@ flowchart TB
         direction LR
         C["Controladores<br/>Libros, Usuarios, Préstamos,<br/>Devoluciones, Multas, Reportes"]
         VM["Modelos de vista<br/>(formularios y listados)"]
-        V["Vistas Razor<br/>+ Bootstrap"]
+        V["Vistas Razor<br/>+ Tailwind CSS"]
     end
 
     subgraph CORE["Biblioteca.Core · Modelo"]
