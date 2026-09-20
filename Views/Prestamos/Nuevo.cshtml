@@ -1,77 +1,157 @@
 @model PrestamoNuevoViewModel
 @{
     ViewData["Title"] = "Nuevo préstamo";
-    ViewData["Descripcion"] = "Seleccione el usuario y el libro; el sistema valida todas las reglas al registrar.";
+    ViewData["Descripcion"] = "Elija quién se lleva el libro y cuál. El resumen muestra cuándo debe volver.";
 }
 
-<div class="tarjeta max-w-3xl p-6 sm:p-8">
-    <form method="post" novalidate>
-        <div asp-validation-summary="All" class="resumen-errores"></div>
+<form method="post" novalidate class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_18rem]">
+    <div asp-validation-summary="All" class="resumen-errores lg:col-span-3 !mb-0"></div>
 
-        <div class="space-y-5">
-            <div>
-                <label asp-for="UsuarioId" class="etiqueta"></label>
-                <select asp-for="UsuarioId" class="input" id="usuario">
-                    <option value="">Seleccione un usuario activo</option>
-                    @foreach (var u in Model.Usuarios)
-                    {
-                        <option value="@u.Id" selected="@(Model.UsuarioId == u.Id)"
-                                data-tipo="@u.TipoUsuario" data-plazo="@u.DiasPrestamo" data-limite="@u.LimitePrestamos"
-                                data-activos="@Model.PrestamosActivos.GetValueOrDefault(u.Id)"
-                                data-multa="@Model.MultasPendientes.GetValueOrDefault(u.Id).ToString("N2")">
-                            @u.Nombre · @u.TipoUsuario (@u.EtiquetaDetalle: @u.Detalle)
-                        </option>
-                    }
-                </select>
-                <span asp-validation-for="UsuarioId" class="error-campo"></span>
-            </div>
-
-            <div>
-                <label asp-for="LibroId" class="etiqueta"></label>
-                <select asp-for="LibroId" class="input" id="libro">
-                    <option value="">Seleccione un libro disponible</option>
-                    @foreach (var l in Model.Libros)
-                    {
-                        <option value="@l.Id" selected="@(Model.LibroId == l.Id)">@l.Titulo · @l.Autor (@l.CopiasDisponibles disp.)</option>
-                    }
-                </select>
-                <span asp-validation-for="LibroId" class="error-campo"></span>
-            </div>
-
-            <div class="flex items-start gap-3 rounded-lg border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm text-indigo-900">
-                <svg class="mt-0.5 h-5 w-5 shrink-0 text-indigo-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" /></svg>
-                <p id="resumen">Seleccione el usuario para ver las condiciones del préstamo.</p>
-            </div>
+    <section aria-labelledby="titulo-lector">
+        <h2 id="titulo-lector" class="text-base font-semibold">Lector</h2>
+        <input type="search" class="input mt-2" placeholder="Buscar por nombre" aria-label="Buscar lector" data-filtra="listaUsuarios" />
+        <div id="listaUsuarios" class="mt-2 max-h-96 divide-y divide-linea overflow-y-auto rounded-md border border-linea" role="radiogroup" aria-labelledby="titulo-lector">
+            @foreach (var u in Model.Usuarios)
+            {
+                var activos = Model.PrestamosActivos.GetValueOrDefault(u.Id);
+                var multa = Model.MultasPendientes.GetValueOrDefault(u.Id);
+                <div data-buscar="@u.Nombre @u.TipoUsuario">
+                    <input type="radio" name="UsuarioId" value="@u.Id" id="usuario-@u.Id" class="peer sr-only"
+                           checked="@(Model.UsuarioId == u.Id)"
+                           data-nombre="@u.Nombre" data-tipo="@u.TipoUsuario" data-plazo="@u.DiasPrestamo" data-limite="@u.LimitePrestamos"
+                           data-activos="@activos" data-multa="@multa.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" />
+                    <label for="usuario-@u.Id" class="opcion-lista">
+                        <span class="block font-medium">@u.Nombre</span>
+                        <span class="block text-suave">@u.TipoUsuario, @activos de @u.LimitePrestamos @(u.LimitePrestamos == 1 ? "préstamo" : "préstamos")</span>
+                        @if (multa > 0)
+                        {
+                            <span class="estado estado-ambar mt-0.5">Multa de Q@(multa.ToString("N2"))</span>
+                        }
+                    </label>
+                </div>
+            }
+            <p class="hidden px-3 py-6 text-center text-suave" data-sin-resultados>Ningún lector coincide.</p>
         </div>
+        <span asp-validation-for="UsuarioId" class="error-campo"></span>
+    </section>
 
-        <div class="mt-8 flex gap-3 border-t border-slate-100 pt-6">
-            <button type="submit" class="btn btn-primary">Registrar préstamo</button>
-            <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+    <section aria-labelledby="titulo-libro">
+        <h2 id="titulo-libro" class="text-base font-semibold">Libro</h2>
+        <input type="search" class="input mt-2" placeholder="Buscar por título o autor" aria-label="Buscar libro" data-filtra="listaLibros" />
+        <div id="listaLibros" class="mt-2 max-h-96 divide-y divide-linea overflow-y-auto rounded-md border border-linea" role="radiogroup" aria-labelledby="titulo-libro">
+            @foreach (var l in Model.Libros)
+            {
+                <div data-buscar="@l.Titulo @l.Autor">
+                    <input type="radio" name="LibroId" value="@l.Id" id="libro-@l.Id" class="peer sr-only"
+                           checked="@(Model.LibroId == l.Id)"
+                           data-titulo="@l.Titulo" data-autor="@l.Autor" />
+                    <label for="libro-@l.Id" class="opcion-lista">
+                        <span class="block font-medium">@l.Titulo</span>
+                        <span class="block">@l.Autor</span>
+                        <span class="block text-suave">@l.CopiasDisponibles de @l.CopiasTotales disponibles</span>
+                    </label>
+                </div>
+            }
+            <p class="hidden px-3 py-6 text-center text-suave" data-sin-resultados>Ningún libro coincide.</p>
         </div>
-    </form>
-</div>
+        <span asp-validation-for="LibroId" class="error-campo"></span>
+    </section>
+
+    <aside class="self-start rounded-md border border-linea bg-lateral p-4 lg:sticky lg:top-6" aria-labelledby="titulo-resumen">
+        <h2 id="titulo-resumen" class="text-base font-semibold">Resumen del préstamo</h2>
+        <dl class="mt-3 divide-y divide-linea">
+            <div class="py-2">
+                <dt class="text-suave">Lector</dt>
+                <dd id="resumenLector" class="font-medium"></dd>
+            </div>
+            <div class="py-2">
+                <dt class="text-suave">Libro</dt>
+                <dd id="resumenLibro" class="font-medium"></dd>
+            </div>
+            <div class="py-2">
+                <dt class="text-suave">Debe volver el</dt>
+                <dd id="resumenVence" class="text-lg font-semibold"></dd>
+            </div>
+        </dl>
+        <ul id="resumenAvisos" class="mt-2 space-y-1.5"></ul>
+        <button type="submit" id="botonPrestar" class="btn btn-primary mt-4 w-full">Registrar préstamo</button>
+        <a class="btn btn-secondary mt-2 w-full" asp-action="Index">Cancelar</a>
+    </aside>
+</form>
 
 @section Scripts {
     <script>
-        const usuario = document.getElementById('usuario');
-        const resumen = document.getElementById('resumen');
         const hoy = new Date('@DateTime.Today.ToString("yyyy-MM-dd")T00:00:00');
-        function actualizar() {
-            const opcion = usuario.selectedOptions[0];
-            if (!opcion || !opcion.value) {
-                resumen.textContent = 'Seleccione el usuario para ver las condiciones del préstamo.';
-                return;
-            }
-            const plazo = parseInt(opcion.dataset.plazo, 10);
-            const vence = new Date(hoy.getTime());
-            vence.setDate(vence.getDate() + plazo);
-            let texto = `${opcion.dataset.tipo}: plazo de ${plazo} días, vence el ${vence.toLocaleDateString('es-GT')}. ` +
-                        `Préstamos activos: ${opcion.dataset.activos} de ${opcion.dataset.limite} permitidos.`;
-            if (parseFloat(opcion.dataset.multa.replace(',', '')) > 0)
-                texto += ` Atención: tiene multas pendientes por Q${opcion.dataset.multa}.`;
-            resumen.textContent = texto;
+        const resumen = {
+            lector: document.getElementById('resumenLector'),
+            libro: document.getElementById('resumenLibro'),
+            vence: document.getElementById('resumenVence'),
+            avisos: document.getElementById('resumenAvisos'),
+            boton: document.getElementById('botonPrestar')
+        };
+
+        const elegido = nombre => document.querySelector('input[name="' + nombre + '"]:checked');
+        const pendiente = (elemento, texto) => {
+            elemento.textContent = texto;
+            elemento.classList.add('font-normal', 'text-suave');
+        };
+        const definido = (elemento, texto) => {
+            elemento.textContent = texto;
+            elemento.classList.remove('font-normal', 'text-suave');
+        };
+
+        function aviso(texto, grave) {
+            const li = document.createElement('li');
+            li.className = grave ? 'text-rojo' : 'text-suave';
+            li.textContent = texto;
+            resumen.avisos.appendChild(li);
         }
-        usuario.addEventListener('change', actualizar);
+
+        function actualizar() {
+            const usuario = elegido('UsuarioId');
+            const libro = elegido('LibroId');
+            resumen.avisos.replaceChildren();
+
+            if (usuario) definido(resumen.lector, usuario.dataset.nombre); else pendiente(resumen.lector, 'Elija un lector');
+            if (libro) definido(resumen.libro, libro.dataset.titulo); else pendiente(resumen.libro, 'Elija un libro');
+
+            if (usuario) {
+                const plazo = parseInt(usuario.dataset.plazo, 10);
+                const vence = new Date(hoy.getTime());
+                vence.setDate(vence.getDate() + plazo);
+                definido(resumen.vence, vence.toLocaleDateString('es-GT', { weekday: 'long', day: 'numeric', month: 'long' }));
+
+                const activos = parseInt(usuario.dataset.activos, 10);
+                const limite = parseInt(usuario.dataset.limite, 10);
+                const multa = parseFloat(usuario.dataset.multa);
+                aviso('Plazo de ' + plazo + ' días. Lleva ' + activos + ' de ' + limite + ' préstamos.', false);
+                if (activos >= limite) aviso('Ya llegó al límite de préstamos: no puede llevarse más libros.', true);
+                if (multa > 0) aviso('Tiene multas pendientes por Q' + multa.toFixed(2) + '. Debe pagarlas antes de llevarse un libro.', true);
+            } else {
+                pendiente(resumen.vence, 'Elija un lector para calcularlo');
+                resumen.vence.classList.add('text-base');
+            }
+            if (usuario) resumen.vence.classList.remove('text-base');
+            resumen.boton.disabled = !(usuario && libro);
+        }
+
+        document.querySelectorAll('input[name="UsuarioId"], input[name="LibroId"]').forEach(r => r.addEventListener('change', actualizar));
+
+        // Buscador de cada lista: oculta las opciones que no coinciden.
+        document.querySelectorAll('[data-filtra]').forEach(campo => {
+            const lista = document.getElementById(campo.dataset.filtra);
+            campo.addEventListener('input', () => {
+                const texto = campo.value.trim().toLowerCase();
+                let visibles = 0;
+                lista.querySelectorAll('[data-buscar]').forEach(fila => {
+                    const coincide = fila.dataset.buscar.toLowerCase().includes(texto);
+                    fila.hidden = !coincide;
+                    if (coincide) visibles++;
+                });
+                lista.querySelector('[data-sin-resultados]').classList.toggle('hidden', visibles > 0);
+            });
+        });
+
         actualizar();
     </script>
 }
