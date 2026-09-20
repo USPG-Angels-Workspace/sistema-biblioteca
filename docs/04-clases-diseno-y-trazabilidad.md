@@ -41,7 +41,24 @@ Las clases del código tienen correspondencia directa con el diagrama de clases 
 | `DevolucionService` | Registrar la devolución, liberar el ejemplar y disparar la generación de la multa. |
 | `MultaService` | Calcular y generar multas, registrar pagos, consultar multas y saldos pendientes. |
 | `ReporteService` | Construir los cinco reportes (`ReporteTabular`) y exportarlos a CSV. |
-| `SistemaBiblioteca` | Punto de entrada: crea los repositorios JSON y los servicios; es lo único que la interfaz necesita conocer. |
+| `SistemaBiblioteca` | Punto de entrada: crea los repositorios JSON y los servicios; es lo único que los controladores necesitan conocer. |
+
+## 6.4 Controladores, modelos de vista y vistas (`Biblioteca.Web`)
+
+| Controlador | Acciones | Vistas (`Views/`) | Servicio que usa |
+|---|---|---|---|
+| `HomeController` | `Index` (panel), `Error` | `Home/Index`, `Shared/Error` | Todos (solo lectura) |
+| `LibrosController` | `Index`, `Crear`, `Editar`, `Eliminar` | `Libros/Index`, `Crear`, `Editar`, `_Formulario` | `LibroService` |
+| `UsuariosController` | `Index`, `Crear`, `Editar`, `Eliminar` | `Usuarios/Index`, `Crear`, `Editar`, `_Formulario` | `UsuarioService` |
+| `PrestamosController` | `Index`, `Nuevo`, `Renovar` | `Prestamos/Index`, `Nuevo` | `PrestamoService` |
+| `DevolucionesController` | `Index`, `Registrar` | `Devoluciones/Index` | `DevolucionService`, `MultaService` |
+| `MultasController` | `Index`, `Pagar` | `Multas/Index` | `MultaService` |
+| `ReportesController` | `Index`, `Exportar` | `Reportes/Index` | `ReporteService` |
+
+- Todos heredan de `BaseController` (salvo `Home` y `Reportes`), que traduce `ValidacionException` y `AlmacenamientoException` en mensajes para el usuario.
+- Los **modelos de vista** (`Models/ViewModels`) transportan los datos de los formularios (con validaciones `DataAnnotations`) y de los listados; las entidades del dominio nunca se enlazan directamente a un formulario.
+- Las acciones que modifican datos son `POST` con `[ValidateAntiForgeryToken]`; después de guardar se redirige (patrón Post/Redirect/Get) y el mensaje se entrega con `TempData`.
+- `SistemaBiblioteca` se registra como *singleton* en `Program.cs` y se inyecta por constructor en cada controlador.
 
 ---
 
@@ -56,7 +73,7 @@ Las clases del código tienen correspondencia directa con el diagrama de clases 
 | `prestamos.json` | Historial completo de préstamos. | `Prestamo` |
 | `multas.json` | Multas generadas y su estado de pago. | `Multa` |
 
-Los archivos se guardan en la carpeta `datos/` junto al ejecutable (o en la ruta indicada por la variable de entorno `BIBLIOTECA_DATOS`). El repositorio incluye los **datos de prueba** en `datos/` y el proyecto los copia automáticamente a la carpeta de salida.
+Los archivos se guardan en la carpeta `Data/` de la aplicación web (o en la ruta indicada por la configuración `DataPath` o la variable de entorno `BIBLIOTECA_DATOS`). El repositorio incluye los **datos de prueba** en `Data/`.
 
 ## 7.2 Ejemplo de formato
 
@@ -81,39 +98,39 @@ Solo se guardan los datos primarios: las propiedades calculadas (`LimitePrestamo
 1. **Al iniciar**, `RepositorioJson<T>` lee el archivo completo y lo deserializa a una lista en memoria. Si no existe o está vacío, comienza con una colección vacía.
 2. **En cada cambio** (agregar, actualizar o eliminar) serializa la lista completa a `archivo.json.tmp` y luego reemplaza al archivo original. Así, un fallo a mitad de escritura no deja un archivo truncado.
 3. **Identificadores:** `Id = máximo actual + 1`. Los identificadores de registros eliminados no se reutilizan mientras exista un registro con un identificador mayor.
-4. **Errores:** un JSON dañado o un problema de disco se convierte en `AlmacenamientoException` con el nombre del archivo; al iniciar, la aplicación lo muestra y no abre con datos incompletos.
+4. **Errores:** un JSON dañado o un problema de disco se convierte en `AlmacenamientoException` con el nombre del archivo; al iniciar, la aplicación no arranca con datos incompletos y muestra el error; al guardar, el controlador muestra el mensaje al usuario.
 5. **Codificación:** UTF-8, con sangría, sin escapar tildes ni «ñ», para que el archivo sea legible.
 
 ---
 
-# 8. Interfaz gráfica
+# 8. Interfaz web
 
-La interfaz se construyó con Avalonia (XAML + C#), sin lógica de negocio: cada vista solo llama a los servicios y muestra el resultado. Cumple con lo mínimo solicitado:
+La interfaz es una aplicación **ASP.NET Core MVC**: páginas Razor (`.cshtml`) con Bootstrap, que se abren desde el navegador. Las vistas no contienen lógica de negocio: los controladores llaman a los servicios y las vistas muestran el resultado. Cumple con lo mínimo solicitado:
 
 | Requisito de interfaz | Cómo se cumple |
 |---|---|
-| Menú principal | Barra lateral con **Inicio, Libros, Usuarios, Préstamos, Devoluciones y multas, Reportes y Salir**. |
-| Botones de navegación | El menú lateral y los accesos rápidos de la pantalla de inicio. |
-| Formularios de registro | Formularios modales de libro, usuario y préstamo. |
-| Consulta de información | Tablas con búsqueda, filtros y ordenamiento por columna. |
-| Edición de información | Botón **Editar** o doble clic sobre una fila. |
+| Menú principal | Barra lateral con **Inicio, Libros, Usuarios, Préstamos, Devoluciones, Multas y Reportes**. |
+| Botones de navegación | El menú lateral, el botón **+ Nuevo** de cada módulo, los botones **Cancelar** y los accesos rápidos del inicio. |
+| Formularios de registro | Páginas de alta de libro, usuario y préstamo. |
+| Consulta de información | Tablas con búsqueda, filtros por categoría, tipo o estado, y resúmenes. |
+| Edición de información | Botón **Editar** en cada fila de libros y usuarios. |
 | Eliminación | Botón **Eliminar** en libros y usuarios, permitido solo sin historial. |
-| Mensajes de confirmación | Diálogo «¿Está seguro?» antes de eliminar, renovar, devolver o cobrar; mensaje de éxito después de cada operación. |
-| Mensajes de error | Errores de validación dentro del formulario (en rojo) y diálogo de error para operaciones rechazadas. |
-| Validación de datos | Campos obligatorios, formatos (ISBN, DPI, correo, teléfono), números, unicidad y reglas de negocio. |
+| Mensajes de confirmación | Cuadro de confirmación del navegador antes de eliminar, renovar, devolver o cobrar; alerta verde de éxito después de cada operación. |
+| Mensajes de error | Alerta roja dentro del formulario con el motivo (validación o regla de negocio) y alerta roja tras una operación rechazada. |
+| Validación de datos | Campos obligatorios, formatos (ISBN, DPI, correo, teléfono), números, unicidad y reglas de negocio, siempre validados en el servidor. |
 
-### Pantalla de inicio
-![Pantalla de inicio](img/pantalla-inicio.png)
+### Inicio
+![Panel de inicio](img/pantalla-inicio.png)
 
 ### Libros
-![Módulo de libros](img/pantalla-libros.png)
+![Listado de libros](img/pantalla-libros.png)
 
 | Formulario | Validación |
 |---|---|
 | ![Formulario de libro](img/form-libro.png) | ![Error de validación](img/form-libro-error.png) |
 
 ### Usuarios
-![Módulo de usuarios](img/pantalla-usuarios.png)
+![Listado de usuarios](img/pantalla-usuarios.png)
 
 | Formulario | Validación |
 |---|---|
@@ -122,7 +139,7 @@ La interfaz se construyó con Avalonia (XAML + C#), sin lógica de negocio: cada
 ### Préstamos
 Los préstamos atrasados se resaltan en rojo y los devueltos en gris.
 
-![Módulo de préstamos](img/pantalla-prestamos.png)
+![Listado de préstamos](img/pantalla-prestamos.png)
 
 | Nuevo préstamo | Préstamo rechazado por regla de negocio |
 |---|---|
@@ -138,11 +155,8 @@ Los préstamos atrasados se resaltan en rojo y los devueltos en gris.
 
 ![Reporte de libros atrasados](img/pantalla-reporte-atrasados.png)
 
-### Diálogos de mensajes
-
-| Confirmación | Error |
-|---|---|
-| ![Diálogo de confirmación](img/dialogo-confirmar.png) | ![Diálogo de error](img/dialogo-error.png) |
+### Mensaje de confirmación
+![Confirmación tras registrar un libro](img/libro-registrado.png)
 
 ---
 
@@ -160,19 +174,19 @@ El proyecto demuestra la cadena **Problema → Requisitos → UML → Clases →
 | Vencimientos y multas sin control | RF-18 a RF-22 | CU-12 a CU-16; secuencia y actividad de devolución | `DevolucionService`, `MultaService`, `Multa`, `ICalculadoraMulta`, `MultaPorDia` |
 | Reportes lentos y propensos a error | RF-23 a RF-28 | CU-17 | `ReporteService`, `ReporteTabular` |
 | Información que se pierde | RF-29 a RF-31 | Secuencia de persistencia | `IRepositorio<T>`, `RepositorioJson<T>`, `AlmacenamientoException` |
-| Uso poco claro del sistema | RF-32 a RF-34 | Especificación de casos de uso | `MainWindow`, `Dialogos`, formularios |
+| Uso poco claro del sistema | RF-32 a RF-34 | Especificación de casos de uso; arquitectura MVC | `BaseController`, controladores, vistas y modelos de vista |
 
 ## 9.2 De las clases a la interfaz, los archivos y las pruebas
 
-| Requisitos | Código C# | Interfaz | Archivo | Pruebas |
+| Requisitos | Código C# | Controlador y vistas | Archivo | Pruebas |
 |---|---|---|---|---|
-| RF-01 a RF-07 | `LibroService.Registrar/Editar/Eliminar/Buscar`, `Libro.PrestarCopia/DevolverCopia` | `LibrosView`, `LibroFormWindow` | `libros.json` | `LibroTests`, `LibroServiceTests` |
-| RF-08 a RF-11 | `Persona.Actualizar`, `LimitePrestamos`, `DiasPrestamo` | `UsuariosView`, `UsuarioFormWindow` | `usuarios.json` | `PersonaTests`, `UsuarioServiceTests` |
-| RF-12 a RF-17 | `PrestamoService.Prestar/Renovar`, `Prestamo.Renovar/ObtenerEstado` | `PrestamosView`, `PrestamoFormWindow` | `prestamos.json` | `PrestamoTests`, `PrestamoFlujoTests` |
-| RF-18 a RF-22 | `DevolucionService.Registrar`, `MultaService.GenerarPorDevolucion/Pagar` | `DevolucionesView` | `multas.json`, `prestamos.json` | `MultaTests`, `PrestamoFlujoTests` |
-| RF-23 a RF-28 | `ReporteService.*`, `ReporteTabular.ACsv` | `ReportesView` | (lee los cuatro archivos) | `ReporteServiceTests` |
-| RF-29 a RF-31 | `RepositorioJson.Cargar/Guardar` | Mensaje de error al iniciar | Los cuatro archivos JSON | `PersistenciaTests`, `DatosDePruebaTests` |
-| RF-32 a RF-34 | `MainWindow.Navegar`, `Dialogos.Confirmar/Error/Informacion` | Toda la aplicación | — | Verificación manual de la interfaz |
+| RF-01 a RF-07 | `LibroService.Registrar/Editar/Eliminar/Buscar`, `Libro.PrestarCopia/DevolverCopia` | `LibrosController`, `Views/Libros` | `libros.json` | `LibroTests`, `LibroServiceTests`, `WebTests` |
+| RF-08 a RF-11 | `Persona.Actualizar`, `LimitePrestamos`, `DiasPrestamo` | `UsuariosController`, `Views/Usuarios` | `usuarios.json` | `PersonaTests`, `UsuarioServiceTests`, `WebTests` |
+| RF-12 a RF-17 | `PrestamoService.Prestar/Renovar`, `Prestamo.Renovar/ObtenerEstado` | `PrestamosController`, `Views/Prestamos` | `prestamos.json` | `PrestamoTests`, `PrestamoFlujoTests`, `WebTests` |
+| RF-18 a RF-22 | `DevolucionService.Registrar`, `MultaService.GenerarPorDevolucion/Pagar` | `DevolucionesController`, `MultasController`, `Views/Devoluciones`, `Views/Multas` | `multas.json`, `prestamos.json` | `MultaTests`, `PrestamoFlujoTests`, `WebTests` |
+| RF-23 a RF-28 | `ReporteService.*`, `ReporteTabular.ACsv` | `ReportesController`, `Views/Reportes` | (lee los cuatro archivos) | `ReporteServiceTests`, `WebTests` |
+| RF-29 a RF-31 | `RepositorioJson.Cargar/Guardar` | `BaseController` (mensajes de error) | Los cuatro archivos JSON | `PersistenciaTests`, `DatosDePruebaTests` |
+| RF-32 a RF-34 | `BaseController`, `Program.cs` | `Views/Shared/_Layout`, formularios y alertas | — | `WebTests` |
 
 ---
 
@@ -180,7 +194,7 @@ El proyecto demuestra la cadena **Problema → Requisitos → UML → Clases →
 
 ## 10.1 Pruebas automatizadas
 
-El proyecto `tests/Biblioteca.Tests` contiene **70 casos de prueba** (xUnit) que se ejecutan con `dotnet test` sin necesidad de abrir la interfaz:
+El proyecto `tests/Biblioteca.Tests` contiene **94 casos de prueba** (xUnit) que se ejecutan con `dotnet test`: 70 del dominio, los servicios y la persistencia, y 24 de integración que arrancan la aplicación web completa en memoria:
 
 | Grupo | Qué verifica |
 |---|---|
@@ -193,10 +207,11 @@ El proyecto `tests/Biblioteca.Tests` contiene **70 casos de prueba** (xUnit) que
 | `ReporteServiceTests` | Contenido de los reportes y escape de comas y comillas en el CSV. |
 | `PersistenciaTests` | Los datos sobreviven al cerrar y reabrir; se conserva el polimorfismo; los identificadores continúan; no quedan temporales; archivo dañado o vacío. |
 | `DatosDePruebaTests` | Los datos de prueba cargan, son consistentes (ejemplares vs. préstamos) y cubren todos los estados. |
+| `WebTests` | Las 12 páginas cargan con los datos de prueba; alta de libro y usuario con validaciones; eliminación con y sin historial; préstamo rechazado por atraso; préstamo, renovación y devolución; multa generada y pagada; exportación a CSV; rechazo de envíos sin token antiforgery. |
 
 ## 10.2 Datos de prueba
 
-La carpeta `datos/` incluye 16 libros, 8 usuarios (6 lectores y 2 bibliotecarios), 12 préstamos y 2 multas. Se generaron con la propia lógica del sistema para que sean consistentes y cubren:
+La carpeta `Data/` incluye 16 libros, 8 usuarios (6 lectores y 2 bibliotecarios), 12 préstamos y 2 multas. Se generaron con la propia lógica del sistema para que sean consistentes y cubren:
 
 - Préstamos **activos**, **atrasados** y **devueltos** (a tiempo y con atraso).
 - Un préstamo **renovado**.
@@ -205,13 +220,15 @@ La carpeta `datos/` incluye 16 libros, 8 usuarios (6 lectores y 2 bibliotecarios
 - Un usuario con préstamos **atrasados** (`Luis Eduardo Morales`).
 - Libros que se pueden **eliminar** (sin historial) y otros que no.
 
-## 10.3 Pruebas manuales de interfaz recomendadas
+## 10.3 Pruebas manuales en el navegador
+
+También se recorrieron 24 comprobaciones de extremo a extremo con un navegador Chrome automatizado (formularios, mensajes, confirmaciones, filtros y flujo completo de préstamo, devolución con multa y pago). Para repetirlas a mano:
 
 1. Registrar un libro con un ISBN repetido y comprobar el mensaje de error.
 2. Registrar un préstamo a un usuario con multa pendiente y comprobar el rechazo.
 3. Devolver un préstamo atrasado y comprobar que se genera la multa correcta.
 4. Pagar la multa y volver a prestar al mismo usuario.
-5. Cerrar la aplicación, abrirla de nuevo y comprobar que los datos siguen ahí.
+5. Detener la aplicación, volver a ejecutarla y comprobar que los datos siguen ahí.
 6. Exportar un reporte a CSV y abrirlo en una hoja de cálculo.
 
 ---
@@ -225,19 +242,24 @@ Repositorio: <https://github.com/USPG-Angels-Workspace/sistema-biblioteca>
 ```
 sistema-biblioteca/
 ├── Biblioteca.sln
-├── datos/                 archivos JSON con los datos de prueba
-├── docs/                  documento de análisis, diagramas, imágenes y presentación
+├── Biblioteca.Web.csproj      aplicación web ASP.NET Core MVC
+├── Program.cs                 configuración de la aplicación
+├── Controllers/               controladores MVC
+├── Models/                    modelos de vista (ViewModels)
+├── Views/                     vistas Razor (.cshtml)
+├── wwwroot/                   estilos y Bootstrap
+├── Data/                      archivos JSON con los datos de prueba
+├── docs/                      documento de análisis, diagramas, imágenes y presentación
 ├── src/
-│   ├── Biblioteca.Core/   dominio, servicios y persistencia
-│   └── Biblioteca.App/    interfaz gráfica (Avalonia)
+│   └── Biblioteca.Core/       dominio, servicios y persistencia (el "Modelo")
 └── tests/
-    └── Biblioteca.Tests/  pruebas unitarias (xUnit)
+    └── Biblioteca.Tests/      pruebas unitarias y de integración (xUnit)
 ```
 
 ## 11.2 Flujo de trabajo
 
 - Los commits siguen **Conventional Commits** con la descripción en español (`feat`, `fix`, `docs`, `chore`, `test`…).
-- Cada commit contiene un solo cambio lógico y el historial se construyó por capas: estructura base → dominio → persistencia → servicios → pruebas → interfaz → documentación.
+- Cada commit contiene un solo cambio lógico y el historial se construyó por capas: estructura base → dominio → persistencia → servicios → pruebas → interfaz → documentación. Cuando el proyecto pasó a ser una aplicación web MVC, el cambio se hizo también por capas (plantilla → modelos de vista → controladores → vistas → pruebas de integración).
 
 ## 11.3 Cómo ejecutar
 
@@ -246,5 +268,7 @@ Requisitos: .NET SDK 8 o superior.
 ```bash
 dotnet build Biblioteca.sln
 dotnet test tests/Biblioteca.Tests
-dotnet run --project src/Biblioteca.App
+dotnet run
 ```
+
+`dotnet run` inicia el servidor y muestra la dirección (por defecto `http://localhost:5110`); se abre en el navegador. Los cambios se guardan en `Data/`; para volver a los datos de prueba originales basta con `git checkout Data`.
