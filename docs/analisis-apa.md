@@ -1,12 +1,24 @@
 <div class="portada-apa">
-<p class="titulo-portada">Sistema de Biblioteca Web: Análisis, Modelado UML e Implementación con ASP.NET Core MVC</p>
-<p>Angela María Cruz Cifuentes, Carlos Fernando Villatoro López y Angel Kaled Rodriguez Soc</p>
-<p>Universidad San Pablo de Guatemala</p>
-<p>Programación II</p>
-<p>Erik Arnulfo Santizo Bardales</p>
-<p>10 de octubre de 2026</p>
-<p class="nota-autores-titulo"><strong>Nota de los autores</strong></p>
-<p class="nota-autores">Carnés: Angela María Cruz Cifuentes, 2600447; Carlos Fernando Villatoro López, 2600094; Angel Kaled Rodriguez Soc, 2600100. Repositorio del proyecto: https://github.com/USPG-Angels-Workspace/sistema-biblioteca</p>
+<p class="p-universidad">Universidad San Pablo de Guatemala</p>
+<p class="p-curso">Programación II</p>
+<div class="regla"></div>
+<p class="titulo-portada">Sistema de Biblioteca Web</p>
+<p class="subtitulo-portada">Análisis, Modelado UML e Implementación con ASP.NET Core MVC</p>
+<div class="regla corta"></div>
+<p class="p-etiqueta">Autores</p>
+<table class="integrantes">
+<thead><tr><th>Nombre</th><th>Carné</th></tr></thead>
+<tbody>
+<tr><td>Angela María Cruz Cifuentes</td><td>2600447</td></tr>
+<tr><td>Carlos Fernando Villatoro López</td><td>2600094</td></tr>
+<tr><td>Angel Kaled Rodriguez Soc</td><td>2600100</td></tr>
+</tbody>
+</table>
+<p class="p-etiqueta">Catedrático</p>
+<p class="p-dato">Erik Arnulfo Santizo Bardales</p>
+<p class="p-etiqueta">Fecha de presentación</p>
+<p class="p-dato">10 de octubre de 2026</p>
+<p class="p-repo">https://github.com/USPG-Angels-Workspace/sistema-biblioteca</p>
 </div>
 
 <p class="titulo-texto"><strong>Sistema de Biblioteca Web: Análisis, Modelado UML e Implementación con ASP.NET Core MVC</strong></p>
