@@ -1,86 +1,106 @@
 @model DashboardViewModel
 @{
     ViewData["Title"] = "Inicio";
-    ViewData["Descripcion"] = DateTime.Today.ToString("dddd, d 'de' MMMM 'de' yyyy", new System.Globalization.CultureInfo("es-GT"));
+    var fecha = DateTime.Today.ToString("dddd, d 'de' MMMM 'de' yyyy", new System.Globalization.CultureInfo("es-GT"));
+    ViewData["Descripcion"] = char.ToUpper(fecha[0]) + fecha[1..];
+    var todoAlDia = Model.PrestamosAtrasados == 0 && Model.MultasPendientes == 0;
 }
 
-<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
-    <div class="tarjeta p-5">
-        <p class="text-sm text-slate-500">Libros</p>
-        <p class="mt-1 text-3xl font-bold text-indigo-600">@Model.TotalLibros</p>
-        <p class="mt-1 text-xs text-slate-500">@Model.EjemplaresDisponibles de @Model.TotalEjemplares ejemplares disponibles</p>
-    </div>
-    <div class="tarjeta p-5">
-        <p class="text-sm text-slate-500">Usuarios</p>
-        <p class="mt-1 text-3xl font-bold text-emerald-600">@Model.TotalUsuarios</p>
-        <p class="mt-1 text-xs text-slate-500">@Model.UsuariosActivos activos</p>
-    </div>
-    <div class="tarjeta p-5">
-        <p class="text-sm text-slate-500">Préstamos activos</p>
-        <p class="mt-1 text-3xl font-bold text-violet-600">@Model.PrestamosPendientes</p>
-        <p class="mt-1 text-xs text-slate-500">sin devolver</p>
-    </div>
-    <div class="tarjeta p-5 @(Model.PrestamosAtrasados > 0 ? "border-red-200 bg-red-50/50" : "")">
-        <p class="text-sm text-slate-500">Atrasados</p>
-        <p class="mt-1 text-3xl font-bold @(Model.PrestamosAtrasados > 0 ? "text-red-600" : "text-slate-400")">@Model.PrestamosAtrasados</p>
-        <p class="mt-1 text-xs text-slate-500">pasaron su fecha de devolución</p>
-    </div>
-    <div class="tarjeta p-5 @(Model.MultasPendientes > 0 ? "border-amber-200 bg-amber-50/50" : "")">
-        <p class="text-sm text-slate-500">Multas pendientes</p>
-        <p class="mt-1 text-3xl font-bold @(Model.MultasPendientes > 0 ? "text-amber-600" : "text-slate-400")">Q@(Model.MultasPendientes.ToString("N2"))</p>
-        <p class="mt-1 text-xs text-slate-500">por cobrar</p>
-    </div>
+<div class="mb-8 flex flex-wrap gap-2">
+    <a class="btn btn-primary" asp-controller="Prestamos" asp-action="Nuevo">Prestar un libro</a>
+    <a class="btn btn-secondary" asp-controller="Devoluciones" asp-action="Index">Recibir una devolución</a>
 </div>
 
-<div class="mt-6 grid gap-6 lg:grid-cols-3">
-    <div class="tarjeta overflow-hidden lg:col-span-2">
-        <div class="border-b border-slate-200 px-5 py-4">
-            <h2 class="titulo-tarjeta">Próximos vencimientos</h2>
-        </div>
-        @if (Model.ProximosVencimientos.Count == 0)
+@if (todoAlDia)
+{
+    <p class="mb-8 text-suave">Todo al día: no hay libros atrasados ni multas por cobrar.</p>
+}
+else
+{
+    <ul class="mb-8 divide-y divide-linea border-y border-linea">
+        @if (Model.PrestamosAtrasados > 0)
         {
-            <p class="px-5 py-8 text-center text-sm text-slate-400">No hay préstamos pendientes.</p>
+            <li class="flex items-center justify-between gap-4 py-2.5">
+                <span class="estado estado-rojo">@Textos.Cantidad(Model.PrestamosAtrasados, "libro pasó", "libros pasaron") su fecha de devolución</span>
+                <a class="enlace" asp-controller="Prestamos" asp-action="Index" asp-route-estado="Atrasado">Ver atrasados</a>
+            </li>
         }
-        else
+        @if (Model.MultasPendientes > 0)
         {
-            <div class="overflow-x-auto">
-                <table class="tabla">
-                    <thead><tr><th>Libro</th><th>Usuario</th><th>Vence</th><th>Estado</th></tr></thead>
-                    <tbody>
-                    @foreach (var p in Model.ProximosVencimientos)
-                    {
-                        <tr class="@Estilos.FilaPrestamo(p.Estado)">
-                            <td class="font-medium text-slate-900">@p.Libro</td>
-                            <td>@p.Usuario</td>
-                            <td class="whitespace-nowrap">@p.FechaVencimiento.ToString("dd/MM/yyyy")</td>
-                            <td><span class="insignia @Estilos.InsigniaPrestamo(p.Estado)">@p.EstadoTexto</span></td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
-            </div>
+            <li class="flex items-center justify-between gap-4 py-2.5">
+                <span class="estado estado-ambar">Q@(Model.MultasPendientes.ToString("N2")) en multas por cobrar</span>
+                <a class="enlace" asp-controller="Multas" asp-action="Index" asp-route-estado="pendientes">Ver multas</a>
+            </li>
         }
-    </div>
+    </ul>
+}
 
-    <div class="space-y-6">
-        <div class="tarjeta p-5">
-            <h2 class="titulo-tarjeta">Accesos rápidos</h2>
-            <div class="mt-4 grid gap-2">
-                <a class="btn btn-primary" asp-controller="Prestamos" asp-action="Nuevo">Registrar un préstamo</a>
-                <a class="btn btn-secondary" asp-controller="Devoluciones" asp-action="Index">Registrar una devolución</a>
-                <a class="btn btn-secondary" asp-controller="Libros" asp-action="Index">Consultar libros</a>
-                <a class="btn btn-secondary" asp-controller="Reportes" asp-action="Index">Ver reportes</a>
-            </div>
-        </div>
-        <div class="tarjeta p-5">
-            <h2 class="titulo-tarjeta">Reglas del servicio</h2>
-            <ul class="mt-3 list-disc space-y-1.5 pl-5 text-sm text-slate-600">
-                <li>Lector: hasta 3 libros a la vez, 7 días de préstamo.</li>
-                <li>Bibliotecario: hasta 5 libros, 14 días.</li>
-                <li>Hasta @Prestamo.MaximoRenovaciones renovaciones si el préstamo no está vencido.</li>
-                <li>Multa: Q@(Biblioteca.Core.Politicas.MultaPorDia.TarifaDiaria.ToString("N2")) por día (máximo Q@(Biblioteca.Core.Politicas.MultaPorDia.TopeMaximo.ToString("N2"))).</li>
-                <li>Con multas pendientes o libros atrasados no se pueden hacer nuevos préstamos.</li>
-            </ul>
-        </div>
+<section aria-labelledby="titulo-vencimientos">
+    <div class="mb-1 flex items-baseline justify-between gap-4">
+        <h2 id="titulo-vencimientos" class="text-base font-semibold">Próximos vencimientos</h2>
+        <a class="enlace" asp-controller="Prestamos" asp-action="Index">Ver todos los préstamos</a>
     </div>
-</div>
+    @if (Model.ProximosVencimientos.Count == 0)
+    {
+        <p class="border-t border-linea py-8 text-suave">No hay libros pendientes de devolución.</p>
+    }
+    else
+    {
+        <div class="overflow-x-auto">
+            <table class="tabla">
+                <thead>
+                    <tr><th>Libro y lector</th><th>Vencimiento</th><th><span class="sr-only">Acciones</span></th></tr>
+                </thead>
+                <tbody>
+                @foreach (var p in Model.ProximosVencimientos)
+                {
+                    var detalle = $"Lo entrega {p.Usuario}." +
+                        (p.DiasAtraso > 0 ? $" Tiene {Textos.Cantidad(p.DiasAtraso, "día", "días")} de atraso y se generará una multa." : "");
+                    <tr>
+                        <td class="min-w-[14rem]">
+                            <p class="font-medium">@p.Libro</p>
+                            <p class="text-suave">@p.Usuario</p>
+                        </td>
+                        <td class="whitespace-nowrap">
+                            @if (p.Estado == EstadoPrestamo.Atrasado)
+                            {
+                                <p class="@Estilos.EstadoDePrestamo(p.Estado)">@Textos.Vencimiento(p)</p>
+                            }
+                            else
+                            {
+                                <p>@Textos.Vencimiento(p)</p>
+                            }
+                            <p class="text-suave">@p.FechaVencimientoTexto</p>
+                        </td>
+                        <td class="whitespace-nowrap text-right">
+                            <form method="post" asp-controller="Devoluciones" asp-action="Registrar" asp-route-id="@p.Id"
+                                  data-confirmar="¿Registrar la devolución de «@p.Libro»?"
+                                  data-detalle="@detalle"
+                                  data-boton="Registrar devolución">
+                                <button type="submit" class="btn btn-secondary btn-sm">Registrar devolución</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>
+
+<p class="mt-8 text-suave">
+    @Textos.Cantidad(Model.TotalLibros, "título", "títulos") en el catálogo, con @Model.EjemplaresDisponibles de @Textos.Cantidad(Model.TotalEjemplares, "ejemplar", "ejemplares") en estantería.
+    @Textos.Cantidad(Model.PrestamosPendientes, "préstamo", "préstamos") sin devolver.
+    @Model.UsuariosActivos de @Textos.Cantidad(Model.TotalUsuarios, "usuario", "usuarios") están activos.
+</p>
+
+<details class="mt-4 max-w-prose">
+    <summary class="cursor-pointer text-suave hover:text-tinta">Reglas del servicio</summary>
+    <ul class="mt-2 list-disc space-y-1 pl-5 text-suave">
+        <li>Lector: hasta 3 libros a la vez, 7 días de préstamo.</li>
+        <li>Bibliotecario: hasta 5 libros, 14 días.</li>
+        <li>Hasta @Prestamo.MaximoRenovaciones renovaciones si el préstamo no está vencido.</li>
+        <li>Multa de Q@(Biblioteca.Core.Politicas.MultaPorDia.TarifaDiaria.ToString("N2")) por día de atraso, con tope de Q@(Biblioteca.Core.Politicas.MultaPorDia.TopeMaximo.ToString("N2")).</li>
+        <li>Con multas pendientes o libros atrasados no se pueden hacer nuevos préstamos.</li>
+    </ul>
+</details>

@@ -1,13 +1,13 @@
 @model ErrorViewModel
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = "Algo salió mal";
 }
 
-<div class="tarjeta max-w-xl p-6">
-    <h2 class="text-lg font-semibold text-red-700">Ocurrió un error al procesar la solicitud</h2>
-    <p class="mt-2 text-sm text-slate-600">Vuelva al <a class="font-medium text-indigo-600 hover:underline" asp-controller="Home" asp-action="Index">inicio</a> e intente de nuevo.</p>
+<div class="max-w-xl rounded-md border border-rojo/30 bg-rojo-claro p-5">
+    <p class="font-medium">No se pudo completar la solicitud.</p>
+    <p class="mt-1 text-suave">Vuelva al <a class="enlace" asp-controller="Home" asp-action="Index">inicio</a> e intente de nuevo.</p>
     @if (Model.ShowRequestId)
     {
-        <p class="mt-4 text-xs text-slate-400">Identificador de la solicitud: <code>@Model.RequestId</code></p>
+        <p class="mt-3 text-xs text-suave">Identificador de la solicitud: <code>@Model.RequestId</code></p>
     }
 </div>
