@@ -64,8 +64,8 @@ El **Modelo** vive en `Biblioteca.Core` (entidades como `Libro`, `Persona` → `
 
 ## Documentación
 
-- [Documento de análisis (PDF)](docs/Documento-de-Analisis.pdf)
-- Fuentes en Markdown con diagramas Mermaid y SVG:
+- [Documento de análisis (PDF, 8 páginas)](docs/Documento-de-Analisis.pdf) · fuente: [resumen.md](docs/resumen.md)
+- Anexo con el detalle completo (especificación de cada caso de uso, todos los diagramas y capturas), en Markdown con diagramas Mermaid y SVG:
   [descripción y requisitos](docs/01-descripcion-y-requisitos.md) ·
   [casos de uso](docs/02-casos-de-uso.md) ·
   [diagramas UML](docs/03-diagramas-uml.md) ·
