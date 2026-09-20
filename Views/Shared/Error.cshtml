@@ -3,12 +3,11 @@
     ViewData["Title"] = "Error";
 }
 
-<div class="alert alert-danger">
-    <h2 class="h5">Ocurrió un error al procesar la solicitud.</h2>
-    <p class="mb-0">Vuelva al <a asp-controller="Home" asp-action="Index">inicio</a> e intente de nuevo.</p>
+<div class="tarjeta max-w-xl p-6">
+    <h2 class="text-lg font-semibold text-red-700">Ocurrió un error al procesar la solicitud</h2>
+    <p class="mt-2 text-sm text-slate-600">Vuelva al <a class="font-medium text-indigo-600 hover:underline" asp-controller="Home" asp-action="Index">inicio</a> e intente de nuevo.</p>
+    @if (Model.ShowRequestId)
+    {
+        <p class="mt-4 text-xs text-slate-400">Identificador de la solicitud: <code>@Model.RequestId</code></p>
+    }
 </div>
-
-@if (Model.ShowRequestId)
-{
-    <p class="text-secondary small">Identificador de la solicitud: <code>@Model.RequestId</code></p>
-}
