@@ -116,7 +116,7 @@ public class DatosDePruebaTests : IDisposable
     {
         _carpeta = Path.Combine(Path.GetTempPath(), "biblioteca-datos-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(_carpeta);
-        var origen = Path.Combine(AppContext.BaseDirectory, "datos");
+        var origen = Path.Combine(AppContext.BaseDirectory, "Data");
         foreach (var archivo in Directory.GetFiles(origen, "*.json"))
             File.Copy(archivo, Path.Combine(_carpeta, Path.GetFileName(archivo)));
         _sistema = new SistemaBiblioteca(_carpeta, new RelojFalso { Hoy = new DateTime(2026, 9, 19) });
