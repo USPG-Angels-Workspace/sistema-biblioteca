@@ -455,7 +455,7 @@ La Tabla 5 relaciona cada módulo con sus requisitos, casos de uso, clases, cont
 # Referencias
 
 <p class="ref">Bray, T. (Ed.). (2017). <em>The JavaScript Object Notation (JSON) data interchange format</em> (RFC 8259). Internet Engineering Task Force. https://www.rfc-editor.org/info/rfc8259</p>
-<p class="ref">Conventional Commits. (s. f.). <em>Conventional Commits 1.0.0</em>. https://www.conventionalcommits.org/es/v1.0.0/</p>
+<p class="ref">Conventional Commits. (s. f.). <em>Commits convencionales</em> (Versión 1.0.0). https://www.conventionalcommits.org/es/v1.0.0/</p>
 <p class="ref">Larman, C. (2003). <em>UML y patrones: Una introducción al análisis y diseño orientado a objetos y al proceso unificado</em> (2.ª ed.). Pearson Educación.</p>
 <p class="ref">Microsoft. (s. f.). <em>Información general sobre ASP.NET Core MVC</em>. Microsoft Learn. https://learn.microsoft.com/es-es/aspnet/core/mvc/overview</p>
 <p class="ref">Object Management Group. (2017). <em>Unified modeling language (UML)</em> (Versión 2.5.1). https://www.omg.org/spec/UML/2.5.1/PDF</p>
