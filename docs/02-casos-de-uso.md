@@ -36,7 +36,7 @@
 | Campo | Descripción |
 |---|---|
 | **Actor** | Bibliotecario |
-| **Precondición** | La aplicación está abierta en el módulo *Libros*. |
+| **Precondición** | La aplicación está abierta en la página *Libros*. |
 | **Flujo principal** | 1. El bibliotecario pulsa **Nuevo libro**. 2. El sistema muestra el formulario. 3. El bibliotecario ingresa ISBN, título, autor, editorial, año, categoría y ejemplares. 4. Pulsa **Guardar**. 5. El sistema valida los datos, verifica que el ISBN no exista y guarda el libro en `libros.json`. 6. El sistema muestra el mensaje de confirmación y actualiza la tabla. |
 | **Flujos alternos** | 5a. Dato inválido o ISBN repetido: el sistema muestra el error en el formulario y no guarda. <br> 4a. El bibliotecario pulsa **Cancelar**: no se guarda nada. |
 | **Postcondición** | El libro queda registrado con todos sus ejemplares disponibles. |
@@ -67,7 +67,7 @@
 |---|---|
 | **Actores** | Bibliotecario (opera), Lector (entrega) |
 | **Precondición** | Existe un préstamo sin devolver (*Activo* o *Atrasado*). |
-| **Flujo principal** | 1. El bibliotecario abre **Devoluciones y multas**, selecciona el préstamo y pulsa **Registrar devolución**. 2. El sistema muestra los días de atraso y la multa estimada, si los hay, y pide confirmación. 3. Al confirmar, el sistema registra la fecha de devolución, libera el ejemplar del libro y guarda los archivos. 4. Si hubo atraso, ejecuta CU-14. 5. Muestra el resultado de la operación. |
+| **Flujo principal** | 1. El bibliotecario abre **Devoluciones** y pulsa **Registrar devolución** en el préstamo. 2. El sistema muestra los días de atraso y la multa estimada, si los hay, y pide confirmación. 3. Al confirmar, el sistema registra la fecha de devolución, libera el ejemplar del libro y guarda los archivos. 4. Si hubo atraso, ejecuta CU-14. 5. Muestra el resultado de la operación. |
 | **Flujos alternos** | 2a. El préstamo ya había sido devuelto: el sistema informa el error. |
 | **Postcondición** | El préstamo queda *Devuelto*, el libro recupera el ejemplar y, si hubo atraso, existe una multa pendiente. |
 
@@ -86,7 +86,7 @@
 |---|---|
 | **Actores** | Bibliotecario (opera), Lector (paga) |
 | **Precondición** | Existe una multa *Pendiente*. |
-| **Flujo principal** | 1. En la pestaña **Multas**, el bibliotecario selecciona la multa y pulsa **Registrar pago**. 2. El sistema pide confirmación. 3. Al confirmar, marca la multa como *Pagada* con la fecha actual y guarda `multas.json`. |
+| **Flujo principal** | 1. En la página **Multas**, el bibliotecario localiza la multa pendiente y pulsa **Registrar pago**. 2. El navegador pide confirmación. 3. Al confirmar, el sistema marca la multa como *Pagada* con la fecha actual y guarda `multas.json`. |
 | **Postcondición** | Si no quedan otras multas pendientes, el usuario puede volver a solicitar préstamos. |
 
 ### CU-17 Generar y exportar reportes
@@ -94,6 +94,6 @@
 | Campo | Descripción |
 |---|---|
 | **Actor** | Bibliotecario |
-| **Flujo principal** | 1. El bibliotecario abre **Reportes** y elige uno de los cinco reportes. 2. El sistema lo calcula con los datos actuales y lo muestra en una tabla con su resumen. 3. Opcionalmente pulsa **Exportar a CSV**, elige el destino y el sistema guarda el archivo. |
-| **Flujos alternos** | 3a. No se puede escribir en el destino: el sistema muestra un mensaje de error. |
+| **Flujo principal** | 1. El bibliotecario abre **Reportes** y elige uno de los cinco reportes. 2. El sistema lo calcula con los datos actuales y lo muestra en una tabla con su resumen. 3. Opcionalmente pulsa **Exportar a CSV** y el navegador descarga el archivo. |
+| **Flujos alternos** | 3a. Si se pide un reporte inexistente, el sistema muestra el de libros disponibles. |
 | **Postcondición** | El reporte se visualizó y, si se pidió, se guardó como archivo CSV. |

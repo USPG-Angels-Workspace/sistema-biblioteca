@@ -21,7 +21,7 @@ No existe un registro único, consistente y consultable que relacione **libros**
 
 ## 1.3 Propuesta de solución
 
-Desarrollar un **sistema de gestión de biblioteca** en C# (.NET 8) con interfaz gráfica de escritorio que:
+Desarrollar un **sistema de gestión de biblioteca** en C# (.NET 8) como **aplicación web ASP.NET Core MVC** (se usa desde el navegador) que:
 
 - Registra y administra libros, usuarios (lectores y bibliotecarios), préstamos, devoluciones y multas.
 - Aplica automáticamente las reglas del servicio (límites por tipo de usuario, plazos, renovaciones máximas, tarifa de multa, bloqueos por multa o atraso).
@@ -32,7 +32,7 @@ El sistema se diseñó siguiendo el proceso **análisis → UML → clases → c
 
 ## 1.4 Objetivo general
 
-Desarrollar una aplicación de escritorio en C# que permita gestionar el catálogo, los usuarios, los préstamos, las devoluciones y las multas de una biblioteca, aplicando análisis orientado a objetos y modelado UML, y almacenando la información en archivos JSON.
+Desarrollar una aplicación web en C# (ASP.NET Core MVC) que permita gestionar el catálogo, los usuarios, los préstamos, las devoluciones y las multas de una biblioteca, aplicando análisis orientado a objetos y modelado UML, y almacenando la información en archivos JSON.
 
 ## 1.5 Objetivos específicos
 
@@ -40,7 +40,7 @@ Desarrollar una aplicación de escritorio en C# que permita gestionar el catálo
 2. Modelar la solución con diagramas UML de casos de uso, clases, secuencia y actividad, que sirvan de base para la implementación.
 3. Implementar el dominio con programación orientada a objetos: clases, encapsulamiento, constructores, propiedades, métodos, herencia, polimorfismo e interfaces.
 4. Implementar la persistencia en archivos JSON, garantizando que la información se recupere al reiniciar la aplicación.
-5. Construir una interfaz gráfica clara con menú principal, formularios de registro, consulta, edición, eliminación, mensajes de confirmación y error, y validación de datos.
+5. Construir una interfaz web clara con menú principal, formularios de registro, consulta, edición, eliminación, mensajes de confirmación y error, y validación de datos.
 6. Verificar el funcionamiento con pruebas automatizadas y con datos de prueba que cubran todos los estados del sistema.
 7. Utilizar GitHub para el versionamiento del proyecto con commits pequeños, ordenados y descriptivos.
 
@@ -60,8 +60,9 @@ El sistema cubre los cinco módulos definidos en el enunciado del proyecto:
 
 ### Limitaciones
 
-- **Un solo puesto de trabajo:** los archivos JSON se cargan en memoria al iniciar; el sistema no está diseñado para que dos instancias escriban a la vez sobre los mismos archivos.
-- **Sin autenticación:** el programa lo opera el personal de la biblioteca; no hay inicio de sesión ni roles con permisos diferenciados.
+- **Una sola instancia:** los archivos JSON se cargan en memoria al iniciar; no se deben ejecutar dos instancias de la aplicación sobre los mismos archivos.
+- **Sin autenticación:** la aplicación la opera el personal de la biblioteca; no hay inicio de sesión ni roles con permisos diferenciados.
+- **Peticiones en serie:** la aplicación web atiende una petición a la vez para proteger los archivos JSON; no está pensada para muchos usuarios simultáneos.
 - **Sin reservas de libros ni notificaciones** (correo o SMS) de vencimiento.
 - **Un catálogo por título:** los ejemplares de un mismo libro se manejan como una cantidad (total y disponibles), no como copias individuales con código propio.
 - **Multas con una única política** (tarifa lineal por día con tope); la política es intercambiable por código (interfaz `ICalculadoraMulta`), pero no es configurable desde la interfaz.
@@ -115,13 +116,13 @@ El sistema cubre los cinco módulos definidos en el enunciado del proyecto:
 
 | ID | Requisito | Categoría |
 |---|---|---|
-| RNF-01 | El sistema se desarrolla en C# sobre .NET 8. | Tecnología |
+| RNF-01 | El sistema se desarrolla en C# sobre .NET 8, como aplicación web ASP.NET Core MVC (controladores, vistas Razor y modelos). | Tecnología |
 | RNF-02 | El diseño aplica POO: encapsulamiento, constructores, propiedades, herencia (`Persona` → `Lector`/`Bibliotecario`), polimorfismo (límite y plazo de préstamo por tipo de usuario) e interfaces (`IRepositorio<T>`, `IReloj`, `ICalculadoraMulta`). | Diseño |
 | RNF-03 | La información se almacena en archivos JSON en UTF-8, legibles y editables con cualquier editor de texto. | Persistencia |
 | RNF-04 | Cada escritura se hace en un archivo temporal y luego reemplaza al original, para no dejar archivos corruptos ante un fallo a medio guardado. | Confiabilidad |
 | RNF-05 | Las reglas del negocio viven en la capa de lógica, no en la interfaz; ningún dato inválido debe llegar a los archivos. | Integridad |
 | RNF-06 | La interfaz es clara, organizada y en español, con mensajes de error comprensibles para el usuario final. | Usabilidad |
-| RNF-07 | La aplicación se ejecuta en Windows, Linux y macOS (interfaz Avalonia). | Portabilidad |
+| RNF-07 | La aplicación se abre desde cualquier navegador moderno y se ejecuta en Windows, Linux y macOS con el SDK de .NET. | Portabilidad |
 | RNF-08 | La lógica se puede probar sin la interfaz: el reloj es inyectable y las pruebas usan carpetas temporales. | Testabilidad |
 | RNF-09 | Las consultas y operaciones responden de forma inmediata con volúmenes de cientos de registros (datos en memoria). | Rendimiento |
 | RNF-10 | El código se versiona en GitHub con commits pequeños siguiendo Conventional Commits, con mensajes en español. | Proceso |
