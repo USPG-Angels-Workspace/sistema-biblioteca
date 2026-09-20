@@ -1,22 +1,19 @@
 @model UsuarioFormViewModel
 @{
     ViewData["Title"] = "Nuevo usuario";
+    ViewData["Descripcion"] = "Elija el tipo de usuario: de eso dependen los límites del préstamo.";
 }
 <partial name="_Formulario" model="Model" />
 
 @section Scripts {
     <script>
-        const tipo = document.getElementById('tipoUsuario');
-        if (tipo) {
-            const actualizar = () => {
-                const bibliotecario = tipo.value === 'Bibliotecario';
-                document.getElementById('etiquetaDetalle').textContent = bibliotecario ? 'Cargo' : 'Carnet';
-                document.getElementById('reglasTipo').textContent = bibliotecario
-                    ? 'Bibliotecario: hasta 5 libros a la vez, con 14 días de préstamo.'
-                    : 'Lector: hasta 3 libros a la vez, con 7 días de préstamo.';
-            };
-            tipo.addEventListener('change', actualizar);
-            actualizar();
-        }
+        // La etiqueta del campo cambia entre Carnet (lector) y Cargo (bibliotecario).
+        const tipos = document.querySelectorAll('input[name="Tipo"][type="radio"]');
+        const actualizar = () => {
+            const elegido = document.querySelector('input[name="Tipo"]:checked');
+            document.getElementById('etiquetaDetalle').textContent = elegido && elegido.value === 'Bibliotecario' ? 'Cargo' : 'Carnet';
+        };
+        tipos.forEach(t => t.addEventListener('change', actualizar));
+        actualizar();
     </script>
 }
