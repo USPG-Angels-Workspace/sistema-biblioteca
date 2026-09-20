@@ -1,0 +1,61 @@
+@model MultasIndexViewModel
+@{
+    ViewData["Title"] = "Multas";
+    ViewData["Descripcion"] = "Control y cobro de las multas generadas por devoluciones con atraso.";
+}
+
+<form method="get" class="row g-2 mb-3 align-items-center">
+    <div class="col-md-5">
+        <input type="text" name="q" value="@Model.Q" class="form-control" placeholder="Buscar por usuario o libro" />
+    </div>
+    <div class="col-md-3">
+        <select name="estado" class="form-select">
+            <option value="" selected="@string.IsNullOrEmpty(Model.Estado)">Todas las multas</option>
+            <option value="pendientes" selected="@(Model.Estado == "pendientes")">Pendientes de pago</option>
+            <option value="pagadas" selected="@(Model.Estado == "pagadas")">Pagadas</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-secondary">Buscar</button>
+        <a class="btn btn-link" asp-action="Index">Limpiar</a>
+    </div>
+</form>
+
+<div class="tabla-tarjeta">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr><th>N°</th><th>Usuario</th><th>Libro</th><th class="text-center">Días atraso</th><th>Monto</th><th>Generada</th><th>Estado</th><th>Pagada el</th><th class="text-end">Acciones</th></tr>
+            </thead>
+            <tbody>
+            @if (Model.Multas.Count == 0)
+            {
+                <tr><td colspan="9" class="text-center text-secondary py-4">No se encontraron multas.</td></tr>
+            }
+            @foreach (var m in Model.Multas)
+            {
+                <tr class="@(m.Pagada ? "fila-devuelta" : "")">
+                    <td>@m.Id</td>
+                    <td class="fw-semibold">@m.Usuario</td>
+                    <td>@m.Libro</td>
+                    <td class="text-center">@m.DiasAtraso</td>
+                    <td>@m.MontoTexto</td>
+                    <td>@m.FechaGeneracionTexto</td>
+                    <td><span class="badge @(m.Pagada ? "text-bg-secondary" : "text-bg-warning")">@m.EstadoTexto</span></td>
+                    <td>@m.FechaPagoTexto</td>
+                    <td class="text-end">
+                        @if (!m.Pagada)
+                        {
+                            <form method="post" asp-action="Pagar" asp-route-id="@m.Id" class="d-inline"
+                                  onsubmit="return confirm('¿Registrar el pago de @m.MontoTexto de @m.Usuario.Replace("'", "\\'")?');">
+                                <button type="submit" class="btn btn-sm btn-primary">Registrar pago</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+<p class="text-secondary small mt-2">@Model.Multas.Count multa(s) — pendiente de cobro en esta lista: Q@(Model.Multas.Where(m => !m.Pagada).Sum(m => m.Monto).ToString("N2"))</p>

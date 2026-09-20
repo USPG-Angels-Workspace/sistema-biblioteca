@@ -1,0 +1,55 @@
+@model DevolucionesIndexViewModel
+@{
+    ViewData["Title"] = "Devoluciones";
+    ViewData["Descripcion"] = "Registro de devoluciones y control de vencimientos. Al devolver con atraso se genera la multa.";
+}
+
+<form method="get" class="row g-2 mb-3 align-items-center">
+    <div class="col-md-6">
+        <input type="text" name="q" value="@Model.Q" class="form-control" placeholder="Buscar por libro o usuario" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-secondary">Buscar</button>
+        <a class="btn btn-link" asp-action="Index">Limpiar</a>
+    </div>
+    <div class="col text-end">
+        <a class="btn btn-outline-primary" asp-controller="Multas" asp-action="Index">Ver multas</a>
+    </div>
+</form>
+
+<div class="tabla-tarjeta">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr><th>N°</th><th>Libro</th><th>Usuario</th><th>Vence</th><th>Estado</th><th class="text-center">Días atraso</th><th>Multa estimada</th><th class="text-end">Acciones</th></tr>
+            </thead>
+            <tbody>
+            @if (Model.Filas.Count == 0)
+            {
+                <tr><td colspan="8" class="text-center text-secondary py-4">No hay préstamos pendientes de devolución.</td></tr>
+            }
+            @foreach (var f in Model.Filas)
+            {
+                var p = f.Prestamo;
+                var aviso = p.DiasAtraso > 0 ? $" Tiene {p.DiasAtraso} día(s) de atraso: se generará una multa de Q{f.MultaEstimada:N2}." : "";
+                <tr class="@(p.Estado == EstadoPrestamo.Atrasado ? "fila-atrasada" : "")">
+                    <td>@p.Id</td>
+                    <td class="fw-semibold">@p.Libro</td>
+                    <td>@p.Usuario</td>
+                    <td>@p.FechaVencimientoTexto</td>
+                    <td><span class="badge @(p.Estado == EstadoPrestamo.Atrasado ? "text-bg-danger" : "text-bg-primary")">@p.EstadoTexto</span></td>
+                    <td class="text-center">@p.DiasAtraso</td>
+                    <td>@(p.DiasAtraso > 0 ? "Q" + f.MultaEstimada.ToString("N2") : "—")</td>
+                    <td class="text-end">
+                        <form method="post" asp-action="Registrar" asp-route-id="@p.Id" class="d-inline"
+                              onsubmit="return confirm('¿Registrar la devolución de «@p.Libro.Replace("'", "\\'")» entregado por @p.Usuario.Replace("'", "\\'")?@aviso');">
+                            <button type="submit" class="btn btn-sm btn-primary">Registrar devolución</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+<p class="text-secondary small mt-2">@Model.Filas.Count pendiente(s) de devolución, @Model.Filas.Count(f => f.Prestamo.DiasAtraso > 0) atrasado(s)</p>

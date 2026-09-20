@@ -1,0 +1,72 @@
+@model PrestamoNuevoViewModel
+@{
+    ViewData["Title"] = "Nuevo préstamo";
+    ViewData["Descripcion"] = "Seleccione el usuario y el libro; el sistema valida todas las reglas al registrar.";
+}
+
+<div class="tarjeta p-4 form-tarjeta">
+    <form method="post" novalidate>
+        <div asp-validation-summary="All" class="alert alert-danger py-2"></div>
+
+        <div class="mb-3">
+            <label asp-for="UsuarioId" class="form-label"></label>
+            <select asp-for="UsuarioId" class="form-select" id="usuario">
+                <option value="">Seleccione un usuario activo</option>
+                @foreach (var u in Model.Usuarios)
+                {
+                    <option value="@u.Id" selected="@(Model.UsuarioId == u.Id)"
+                            data-tipo="@u.TipoUsuario" data-plazo="@u.DiasPrestamo" data-limite="@u.LimitePrestamos"
+                            data-activos="@Model.PrestamosActivos.GetValueOrDefault(u.Id)"
+                            data-multa="@Model.MultasPendientes.GetValueOrDefault(u.Id).ToString("N2")">
+                        @u.Nombre · @u.TipoUsuario (@u.EtiquetaDetalle: @u.Detalle)
+                    </option>
+                }
+            </select>
+            <span asp-validation-for="UsuarioId" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="LibroId" class="form-label"></label>
+            <select asp-for="LibroId" class="form-select" id="libro">
+                <option value="">Seleccione un libro disponible</option>
+                @foreach (var l in Model.Libros)
+                {
+                    <option value="@l.Id" selected="@(Model.LibroId == l.Id)">@l.Titulo · @l.Autor (@l.CopiasDisponibles disp.)</option>
+                }
+            </select>
+            <span asp-validation-for="LibroId" class="text-danger small"></span>
+        </div>
+
+        <div class="alert alert-primary py-2" id="resumen">Seleccione el usuario para ver las condiciones del préstamo.</div>
+
+        <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-primary">Registrar préstamo</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        const usuario = document.getElementById('usuario');
+        const resumen = document.getElementById('resumen');
+        const hoy = new Date('@DateTime.Today.ToString("yyyy-MM-dd")T00:00:00');
+        function actualizar() {
+            const opcion = usuario.selectedOptions[0];
+            if (!opcion || !opcion.value) {
+                resumen.textContent = 'Seleccione el usuario para ver las condiciones del préstamo.';
+                return;
+            }
+            const plazo = parseInt(opcion.dataset.plazo, 10);
+            const vence = new Date(hoy.getTime());
+            vence.setDate(vence.getDate() + plazo);
+            let texto = `${opcion.dataset.tipo}: plazo de ${plazo} días, vence el ${vence.toLocaleDateString('es-GT')}. ` +
+                        `Préstamos activos: ${opcion.dataset.activos} de ${opcion.dataset.limite} permitidos.`;
+            if (parseFloat(opcion.dataset.multa.replace(',', '')) > 0)
+                texto += ` Atención: tiene multas pendientes por Q${opcion.dataset.multa}.`;
+            resumen.textContent = texto;
+        }
+        usuario.addEventListener('change', actualizar);
+        actualizar();
+    </script>
+}

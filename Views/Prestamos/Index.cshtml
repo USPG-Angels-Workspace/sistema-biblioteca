@@ -1,0 +1,66 @@
+@model PrestamosIndexViewModel
+@{
+    ViewData["Title"] = "Préstamos";
+    ViewData["Descripcion"] = "Registro de préstamos, asignación de libros, fechas de devolución y renovaciones.";
+    ViewData["AccionTexto"] = "+ Nuevo préstamo";
+    ViewData["AccionUrl"] = Url.Action("Nuevo")!;
+}
+
+<form method="get" class="row g-2 mb-3 align-items-center">
+    <div class="col-md-5">
+        <input type="text" name="q" value="@Model.Q" class="form-control" placeholder="Buscar por libro o usuario" />
+    </div>
+    <div class="col-md-3">
+        <select name="estado" class="form-select">
+            <option value="" selected="@(Model.Estado is null)">Todos los estados</option>
+            <option value="Activo" selected="@(Model.Estado == EstadoPrestamo.Activo)">Activos</option>
+            <option value="Atrasado" selected="@(Model.Estado == EstadoPrestamo.Atrasado)">Atrasados</option>
+            <option value="Devuelto" selected="@(Model.Estado == EstadoPrestamo.Devuelto)">Devueltos</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-secondary">Buscar</button>
+        <a class="btn btn-link" asp-action="Index">Limpiar</a>
+    </div>
+</form>
+
+<div class="tabla-tarjeta">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr><th>N°</th><th>Libro</th><th>Usuario</th><th>Préstamo</th><th>Vence</th><th>Devuelto</th><th class="text-center">Renov.</th><th class="text-center">Días atraso</th><th>Estado</th><th class="text-end">Acciones</th></tr>
+            </thead>
+            <tbody>
+            @if (Model.Prestamos.Count == 0)
+            {
+                <tr><td colspan="10" class="text-center text-secondary py-4">No se encontraron préstamos.</td></tr>
+            }
+            @foreach (var p in Model.Prestamos)
+            {
+                var clase = p.Estado == EstadoPrestamo.Atrasado ? "fila-atrasada" : p.Estado == EstadoPrestamo.Devuelto ? "fila-devuelta" : "";
+                <tr class="@clase">
+                    <td>@p.Id</td>
+                    <td class="fw-semibold">@p.Libro</td>
+                    <td>@p.Usuario</td>
+                    <td>@p.FechaPrestamoTexto</td>
+                    <td>@p.FechaVencimientoTexto</td>
+                    <td>@p.FechaDevolucionTexto</td>
+                    <td class="text-center">@p.Renovaciones</td>
+                    <td class="text-center">@p.DiasAtraso</td>
+                    <td><span class="badge @(p.Estado == EstadoPrestamo.Atrasado ? "text-bg-danger" : p.Estado == EstadoPrestamo.Activo ? "text-bg-primary" : "text-bg-secondary")">@p.EstadoTexto</span></td>
+                    <td class="text-end text-nowrap">
+                        @if (p.Estado == EstadoPrestamo.Activo)
+                        {
+                            <form method="post" asp-action="Renovar" asp-route-id="@p.Id" class="d-inline"
+                                  onsubmit="return confirm('¿Renovar el préstamo de «@p.Libro.Replace("'", "\\'")» a nombre de @p.Usuario.Replace("'", "\\'")?');">
+                                <button type="submit" class="btn btn-sm btn-outline-primary">Renovar</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+<p class="text-secondary small mt-2">@Model.Prestamos.Count préstamo(s)</p>
