@@ -1,47 +1,69 @@
 @model MultasIndexViewModel
 @{
     ViewData["Title"] = "Multas";
-    ViewData["Descripcion"] = "Control y cobro de las multas generadas por devoluciones con atraso.";
+    ViewData["Descripcion"] = "Lo que se debe por devolver libros con atraso y lo que ya se cobró.";
+
+    var hayFiltros = !string.IsNullOrWhiteSpace(Model.Q) || !string.IsNullOrEmpty(Model.Estado);
+    var pendienteTotal = Model.Multas.Where(m => !m.Pagada).Sum(m => m.Monto);
+    var pestanas = new List<(string Texto, string Url, bool Activa)>
+    {
+        ("Todas", Url.Action("Index", new { q = Model.Q })!, string.IsNullOrEmpty(Model.Estado)),
+        ("Por cobrar", Url.Action("Index", new { q = Model.Q, estado = "pendientes" })!, Model.Estado == "pendientes"),
+        ("Pagadas", Url.Action("Index", new { q = Model.Q, estado = "pagadas" })!, Model.Estado == "pagadas")
+    };
 }
 
-<form method="get" class="mb-4 flex flex-wrap items-center gap-3">
-    <input type="text" name="q" value="@Model.Q" class="input sm:max-w-sm" placeholder="Buscar por usuario o libro" />
-    <select name="estado" class="input sm:max-w-[13rem]">
-        <option value="" selected="@string.IsNullOrEmpty(Model.Estado)">Todas las multas</option>
-        <option value="pendientes" selected="@(Model.Estado == "pendientes")">Pendientes de pago</option>
-        <option value="pagadas" selected="@(Model.Estado == "pagadas")">Pagadas</option>
-    </select>
-    <button type="submit" class="btn btn-secondary">Buscar</button>
-    <a class="btn btn-enlace" asp-action="Index">Limpiar</a>
-</form>
+<div class="mb-2 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-b border-linea">
+    <partial name="_Pestanas" model="pestanas" />
+    <form method="get" class="flex flex-wrap items-center gap-2 pb-2">
+        @if (!string.IsNullOrEmpty(Model.Estado))
+        {
+            <input type="hidden" name="estado" value="@Model.Estado" />
+        }
+        <input type="search" name="q" value="@Model.Q" class="input w-64" placeholder="Nombre del usuario o título del libro" aria-label="Buscar multas" />
+        <button type="submit" class="btn btn-secondary">Buscar</button>
+    </form>
+</div>
 
-<div class="tarjeta overflow-hidden">
+@if (Model.Multas.Count == 0)
+{
+    <div class="py-16 text-center">
+        <p class="font-medium">@(hayFiltros ? "Ninguna multa coincide con la búsqueda." : "No hay multas registradas.")</p>
+        <p class="mt-1 text-suave">@(hayFiltros ? "Pruebe con otro nombre o quite los filtros." : "Se generan solas cuando un libro vuelve después de su fecha de devolución.")</p>
+        @if (hayFiltros)
+        {
+            <a class="btn btn-secondary mt-4" asp-action="Index">Quitar filtros</a>
+        }
+    </div>
+}
+else
+{
     <div class="overflow-x-auto">
         <table class="tabla">
             <thead>
-                <tr><th>N°</th><th>Usuario</th><th>Libro</th><th class="text-center">Días atraso</th><th>Monto</th><th>Generada</th><th>Estado</th><th>Pagada el</th><th class="text-right">Acciones</th></tr>
+                <tr><th>Usuario y libro</th><th>Atraso</th><th>Monto</th><th>Estado</th><th><span class="sr-only">Acciones</span></th></tr>
             </thead>
             <tbody>
-            @if (Model.Multas.Count == 0)
-            {
-                <tr><td colspan="9" class="py-10 text-center text-slate-400">No se encontraron multas.</td></tr>
-            }
             @foreach (var m in Model.Multas)
             {
-                <tr class="@(m.Pagada ? "text-slate-400" : "")">
-                    <td class="text-slate-400">@m.Id</td>
-                    <td class="font-medium @(m.Pagada ? "" : "text-slate-900")">@m.Usuario</td>
-                    <td>@m.Libro</td>
-                    <td class="text-center">@m.DiasAtraso</td>
-                    <td class="whitespace-nowrap font-semibold">@m.MontoTexto</td>
-                    <td class="whitespace-nowrap">@m.FechaGeneracionTexto</td>
-                    <td><span class="insignia @Estilos.InsigniaMulta(m.Pagada)">@m.EstadoTexto</span></td>
-                    <td class="whitespace-nowrap">@m.FechaPagoTexto</td>
+                <tr class="@(m.Pagada ? "text-suave" : "")">
+                    <td class="min-w-[14rem]">
+                        <p class="font-medium">@m.Usuario</p>
+                        <p class="text-suave">@m.Libro</p>
+                    </td>
+                    <td class="whitespace-nowrap">@Textos.Cantidad(m.DiasAtraso, "día", "días")</td>
+                    <td class="whitespace-nowrap font-medium">@m.MontoTexto</td>
+                    <td class="whitespace-nowrap">
+                        <p class="@Estilos.EstadoDeMulta(m.Pagada)">@(m.Pagada ? "Pagada" : "Por cobrar")</p>
+                        <p class="text-suave">@(m.Pagada ? $"Pagada el {m.FechaPagoTexto}" : $"Generada el {m.FechaGeneracionTexto}")</p>
+                    </td>
                     <td class="whitespace-nowrap text-right">
                         @if (!m.Pagada)
                         {
-                            <form method="post" asp-action="Pagar" asp-route-id="@m.Id" class="inline"
-                                  onsubmit="return confirm('¿Registrar el pago de @m.MontoTexto de @m.Usuario.Replace("'", "\\'")?');">
+                            <form method="post" asp-action="Pagar" asp-route-id="@m.Id"
+                                  data-confirmar="¿Registrar el pago de @m.MontoTexto?"
+                                  data-detalle="Lo paga @m.Usuario por devolver «@m.Libro» con atraso."
+                                  data-boton="Registrar pago">
                                 <button type="submit" class="btn btn-primary btn-sm">Registrar pago</button>
                             </form>
                         }
@@ -51,5 +73,11 @@
             </tbody>
         </table>
     </div>
-</div>
-<p class="mt-3 text-sm text-slate-500">@Model.Multas.Count multa(s) — pendiente de cobro en esta lista: Q@(Model.Multas.Where(m => !m.Pagada).Sum(m => m.Monto).ToString("N2"))</p>
+    <p class="mt-3 text-suave">
+        @Textos.Cantidad(Model.Multas.Count, "multa", "multas")@(hayFiltros ? " con estos filtros" : "").
+        @if (pendienteTotal > 0)
+        {
+            <span>Por cobrar en esta lista: <strong class="font-medium text-tinta">Q@(pendienteTotal.ToString("N2"))</strong>.</span>
+        }
+    </p>
+}
