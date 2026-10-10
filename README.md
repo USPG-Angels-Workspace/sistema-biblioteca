@@ -4,7 +4,7 @@
 
 Proyecto Integrador de Programación II (Universidad San Pablo de Guatemala): aplicación web en **C# con ASP.NET Core MVC**, interfaz con **Razor + Tailwind CSS**, programación orientada a objetos y persistencia en **archivos JSON** (sin base de datos).
 
-![Panel de inicio](docs/img/pantalla-inicio.png)
+
 
 ## Integrantes
 
