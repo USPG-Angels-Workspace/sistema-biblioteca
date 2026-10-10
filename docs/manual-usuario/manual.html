@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Manual de usuario — Sistema de biblioteca</title>
+<style>
+  @page { size: Letter; margin: 2.5cm 2.5cm 2.2cm 2.5cm; }
+  body { font-family: "Times New Roman", "Liberation Serif", serif; font-size: 12pt; line-height: 1.5; color: #111; text-align: justify; }
+  h1 { font-size: 16pt; margin: 0 0 10pt; text-align: left; border-bottom: 1px solid #333; padding-bottom: 4pt; }
+  h1, h2 { break-after: avoid; page-break-after: avoid; }
+  h2 { font-size: 13pt; margin: 16pt 0 6pt; text-align: left; }
+  p { margin: 0 0 8pt; }
+  ul, ol { margin: 0 0 8pt 0; padding-left: 20pt; }
+  li { margin-bottom: 3pt; }
+  .portada { text-align: center; page-break-after: always; padding-top: 5cm; }
+  .portada .inst { font-size: 13pt; letter-spacing: 1px; text-transform: uppercase; }
+  .portada h1 { border: none; font-size: 26pt; text-align: center; margin: 2.5cm 0 6pt; }
+  .portada .sub { font-size: 15pt; margin-bottom: 3cm; }
+  .portada table { margin: 0 auto; text-align: left; border-collapse: collapse; font-size: 11.5pt; }
+  .portada td { padding: 3pt 14pt; }
+  .pagina { page-break-before: always; }
+  .indice li { list-style: none; margin-bottom: 5pt; }
+  figure { margin: 10pt 0 12pt; text-align: center; page-break-inside: avoid; }
+  figure img { width: 100%; border: 1px solid #999; }
+  figcaption { font-size: 10.5pt; margin-top: 4pt; font-style: italic; text-align: center; }
+  table.datos { border-collapse: collapse; width: 100%; margin: 6pt 0 12pt; font-size: 11pt; page-break-inside: avoid; }
+  table.datos th, table.datos td { border: 1px solid #555; padding: 4pt 7pt; text-align: left; vertical-align: top; }
+  table.datos th { background: #e6e6e6; }
+</style>
+</head>
+<body>
+
+<section class="portada">
+  <div class="inst">Universidad San Pablo de Guatemala</div>
+  <div>Programación II</div>
+  <h1>Manual de usuario</h1>
+  <div class="sub">Sistema de gestión de biblioteca</div>
+  <table>
+    <tr><td><strong>Integrantes</strong></td><td>Angela María Cruz Cifuentes (2600447)<br>Carlos Fernando Villatoro López (2600094)<br>Angel Kaled Rodriguez Soc (2600100)</td></tr>
+    <tr><td><strong>Catedrático</strong></td><td>Erik Arnulfo Santizo Bardales</td></tr>
+    <tr><td><strong>Fecha</strong></td><td>10 de octubre de 2026</td></tr>
+  </table>
+</section>
+
+<section class="pagina">
+  <h1>Contenido</h1>
+  <ol class="indice">
+    <li>1. Introducción</li>
+    <li>2. Requisitos y acceso al sistema</li>
+    <li>3. Estructura general de la interfaz</li>
+    <li>4. Pantalla de inicio</li>
+    <li>5. Módulo de libros</li>
+    <li>6. Módulo de usuarios</li>
+    <li>7. Módulo de préstamos</li>
+    <li>8. Módulo de devoluciones</li>
+    <li>9. Módulo de multas</li>
+    <li>10. Módulo de reportes</li>
+    <li>11. Reglas del servicio</li>
+    <li>12. Mensajes de validación y recomendaciones</li>
+  </ol>
+</section>
+
+<section class="pagina">
+  <h1>1. Introducción</h1>
+  <p>El presente manual describe el uso del Sistema de gestión de biblioteca, una aplicación web desarrollada como Proyecto Integrador de la asignatura Programación II. El sistema permite administrar el catálogo de libros, los usuarios de la biblioteca, los préstamos, las devoluciones, las multas por atraso y la emisión de reportes.</p>
+  <p>El documento está dirigido al personal de la biblioteca que opera el sistema. Cada sección corresponde a un módulo de la aplicación e indica su propósito, los datos que muestra y los procedimientos que el usuario puede realizar. Las capturas de pantalla incluidas fueron obtenidas de la aplicación en funcionamiento con los datos de prueba incluidos en el proyecto.</p>
+
+  <h1 style="margin-top:20pt">2. Requisitos y acceso al sistema</h1>
+  <p>La aplicación se ejecuta en un servidor local y se utiliza desde un navegador web. Para su uso se requiere un navegador actualizado y conexión a internet, dado que los estilos y la tipografía de la interfaz se cargan desde servicios externos.</p>
+  <p>Una vez iniciada la aplicación, se accede introduciendo en la barra de direcciones del navegador la dirección indicada por el servidor, que por defecto es <strong>http://localhost:5110</strong>. El sistema abre directamente en la pantalla de inicio y no solicita credenciales de autenticación.</p>
+  <p>Los datos se conservan en archivos del propio sistema, por lo que los cambios realizados permanecen disponibles al cerrar y volver a abrir la aplicación.</p>
+</section>
+
+<section class="pagina">
+  <h1>3. Estructura general de la interfaz</h1>
+  <p>Todas las pantallas comparten la misma estructura. En el costado izquierdo se encuentra el menú de navegación, agrupado en tres bloques: <strong>Inicio</strong>; los procesos diarios (<strong>Préstamos</strong>, <strong>Devoluciones</strong> y <strong>Multas</strong>); y la administración de datos (<strong>Libros</strong> y <strong>Usuarios</strong>), seguidos de <strong>Reportes</strong>. La opción correspondiente a la pantalla actual aparece resaltada.</p>
+  <p>En la parte superior del área de contenido se muestra el título de la pantalla y una breve descripción de su función. Debajo se ubican, según el módulo, las pestañas de filtro, el campo de búsqueda y el botón de acción principal, seguidos del listado de registros.</p>
+  <p>Las acciones que modifican información solicitan una confirmación previa mediante un cuadro de diálogo. Tras completar una operación, el sistema muestra un mensaje que informa del resultado.</p>
+</section>
+
+<section class="pagina">
+  <h1>4. Pantalla de inicio</h1>
+  <p>La pantalla de inicio presenta un resumen del estado de la biblioteca y permite acceder rápidamente a las operaciones más frecuentes.</p>
+  <figure><img src="img/01-inicio.jpg" alt=""><figcaption>Figura 1. Pantalla de inicio</figcaption></figure>
+  <p>Contiene los siguientes elementos:</p>
+  <ul>
+    <li><strong>Accesos directos.</strong> Los botones «Prestar un libro» y «Recibir una devolución» conducen directamente a los procesos respectivos.</li>
+    <li><strong>Alertas.</strong> Indican la cantidad de libros que han superado su fecha de devolución y el monto total de multas por cobrar, cada una con un enlace al listado correspondiente.</li>
+    <li><strong>Próximos vencimientos.</strong> Lista los préstamos ordenados por fecha de vencimiento, con el libro, el lector, la fecha límite y los días de atraso en caso de existir. Desde esta lista puede registrarse la devolución directamente.</li>
+    <li><strong>Resumen del catálogo.</strong> Al pie se informa el número de títulos, los ejemplares en estantería, los préstamos sin devolver y los usuarios activos.</li>
+    <li><strong>Reglas del servicio.</strong> Sección desplegable que resume las normas vigentes de préstamo y multas.</li>
+  </ul>
+  <figure><img src="img/02-reglas.jpg" alt=""><figcaption>Figura 2. Sección «Reglas del servicio» desplegada</figcaption></figure>
+</section>
+
+<section class="pagina">
+  <h1>5. Módulo de libros</h1>
+  <p>Este módulo administra el catálogo de la biblioteca. Se accede mediante la opción <strong>Libros</strong> del menú.</p>
+  <h2>5.1 Consulta del catálogo</h2>
+  <figure><img src="img/03-libros.jpg" alt=""><figcaption>Figura 3. Listado de libros</figcaption></figure>
+  <p>El listado muestra, para cada libro, el título y el autor, la categoría, la editorial con el año de publicación y el ISBN, y la disponibilidad expresada como ejemplares disponibles sobre el total. Las pestañas <strong>Todos</strong> y <strong>Disponibles ahora</strong> filtran el listado según la existencia de ejemplares en estantería.</p>
+  <p>El campo de búsqueda localiza libros por título, autor, editorial o ISBN, y el selector de categorías restringe el resultado a una clasificación determinada. Ambos criterios se aplican al presionar el botón <strong>Buscar</strong>.</p>
+
+  <h2>5.2 Registro de un libro</h2>
+  <figure><img src="img/04-libro-nuevo.jpg" alt=""><figcaption>Figura 4. Formulario de registro de libro</figcaption></figure>
+  <p>El botón <strong>Nuevo libro</strong> abre el formulario de registro. Deben completarse los siguientes campos:</p>
+  <table class="datos">
+    <tr><th>Campo</th><th>Descripción</th></tr>
+    <tr><td>Título</td><td>Nombre de la obra.</td></tr>
+    <tr><td>Autor</td><td>Autor o autores de la obra.</td></tr>
+    <tr><td>Editorial</td><td>Casa editorial que publica la obra.</td></tr>
+    <tr><td>ISBN</td><td>Código de 10 o 13 dígitos; los guiones son opcionales. No puede repetirse entre libros.</td></tr>
+    <tr><td>Categoría</td><td>Clasificación del libro, seleccionada de una lista.</td></tr>
+    <tr><td>Año de publicación</td><td>Año en que fue publicada la obra.</td></tr>
+    <tr><td>Ejemplares</td><td>Cantidad total de copias que posee la biblioteca.</td></tr>
+  </table>
+  <p>Al presionar <strong>Registrar libro</strong>, el libro queda disponible para préstamo. El botón <strong>Cancelar</strong> regresa al listado sin guardar cambios.</p>
+</section>
+
+<section>
+  <h2>5.3 Validación del formulario</h2>
+  <p>Cuando faltan datos obligatorios o alguno no es válido, el sistema no guarda el registro. En su lugar se muestra, en la parte superior, un cuadro con la lista de errores, y cada campo afectado se resalta con un mensaje junto a él. El usuario debe corregir los datos y volver a enviar el formulario.</p>
+  <figure><img src="img/05-libro-validacion.jpg" alt=""><figcaption>Figura 5. Mensajes de validación en el formulario de libro</figcaption></figure>
+
+  <h2>5.4 Edición y eliminación</h2>
+  <p>En cada fila del listado, el ícono de lápiz abre el formulario de edición con los datos actuales del libro, que pueden modificarse y guardarse. El ícono de papelera solicita confirmación y elimina el libro del catálogo. Un libro que tiene préstamos registrados en su historial no puede eliminarse; el sistema lo indica con un mensaje.</p>
+</section>
+
+<section class="pagina">
+  <h1>6. Módulo de usuarios</h1>
+  <p>Este módulo administra a las personas que pueden solicitar libros. Existen dos tipos de usuario, <strong>lector</strong> y <strong>bibliotecario</strong>, que difieren en los límites de préstamo. Se accede mediante la opción <strong>Usuarios</strong> del menú.</p>
+  <h2>6.1 Consulta de usuarios</h2>
+  <figure><img src="img/06-usuarios.jpg" alt=""><figcaption>Figura 6. Listado de usuarios</figcaption></figure>
+  <p>El listado presenta el nombre y el correo electrónico, el tipo de usuario con su carnet o cargo, el DPI y el teléfono, y el estado (activo o inactivo). Las pestañas <strong>Todos</strong>, <strong>Lectores</strong> y <strong>Bibliotecarios</strong> filtran por tipo. El campo de búsqueda localiza usuarios por nombre, DPI, correo o carnet.</p>
+
+  <h2>6.2 Registro de un usuario</h2>
+  <figure><img src="img/07-usuario-nuevo.jpg" alt=""><figcaption>Figura 7. Formulario de registro de usuario</figcaption></figure>
+  <p>El botón <strong>Nuevo usuario</strong> abre el formulario. En primer lugar se elige el tipo de usuario, ya que de este dependen los límites del préstamo: el lector puede tener hasta 3 libros a la vez con 7 días de préstamo, y el bibliotecario hasta 5 libros con 14 días. Después se completan el nombre completo, el documento de identificación (DPI) de 13 dígitos, el carnet, el correo electrónico y el teléfono.</p>
+  <p>Al presionar <strong>Registrar usuario</strong> el nuevo usuario queda habilitado. Las reglas de validación operan igual que en el módulo de libros; además, el DPI y el carnet no pueden repetirse entre usuarios.</p>
+
+  <h2>6.3 Edición, desactivación y eliminación</h2>
+  <p>El ícono de lápiz permite modificar los datos de un usuario. En el formulario de edición, la casilla <strong>Usuario activo</strong> determina si la persona puede pedir libros prestados; al desmarcarla, el usuario se conserva en el sistema pero no puede realizar nuevos préstamos. El ícono de papelera elimina al usuario previa confirmación, siempre que no tenga préstamos ni multas en su historial; de lo contrario el sistema lo impide, y en ese caso se recomienda desactivarlo. </p>
+</section>
+
+<section class="pagina">
+  <h1>7. Módulo de préstamos</h1>
+  <p>Este módulo registra los libros que salen de la biblioteca y permite conocer quién los tiene y cuándo deben volver. Se accede mediante la opción <strong>Préstamos</strong> del menú.</p>
+  <h2>7.1 Consulta de préstamos</h2>
+  <figure><img src="img/08-prestamos.jpg" alt=""><figcaption>Figura 8. Listado de préstamos</figcaption></figure>
+  <p>Cada fila muestra el libro y el lector, el estado del préstamo (activo, atrasado o devuelto), la fecha de devolución junto con la fecha en que se realizó el préstamo, y el número de renovaciones utilizadas sobre el máximo permitido. Los préstamos atrasados indican además los días de atraso. Las pestañas <strong>Todos</strong>, <strong>Activos</strong>, <strong>Atrasados</strong> y <strong>Devueltos</strong> filtran el listado, y el campo de búsqueda localiza por título del libro o nombre del usuario.</p>
+
+  <h2>7.2 Registro de un préstamo</h2>
+  <figure><img src="img/09-prestamo-nuevo.jpg" alt=""><figcaption>Figura 9. Registro de un nuevo préstamo</figcaption></figure>
+  <p>El botón <strong>Nuevo préstamo</strong> abre una pantalla dividida en dos listas y un resumen:</p>
+  <ol>
+    <li>En la columna <strong>Lector</strong> se elige a la persona que se llevará el libro. Cada elemento indica el tipo de usuario, cuántos préstamos tiene sobre su límite y, si corresponde, el monto de una multa pendiente. Puede utilizarse el campo de búsqueda para filtrar por nombre.</li>
+    <li>En la columna <strong>Libro</strong> se elige el ejemplar, con la indicación de cuántos hay disponibles. Puede filtrarse por título o autor.</li>
+    <li>El panel <strong>Resumen del préstamo</strong> confirma el lector y el libro seleccionados, calcula automáticamente la fecha en que debe volver y muestra el plazo y los préstamos vigentes del lector.</li>
+    <li>Al presionar <strong>Registrar préstamo</strong> la operación queda registrada y el número de ejemplares disponibles del libro disminuye en uno.</li>
+  </ol>
+  <p>Si el lector tiene multas pendientes, libros atrasados o ha alcanzado su límite de préstamos, el sistema rechaza la operación e informa el motivo.</p>
+
+  <h2>7.3 Renovación</h2>
+  <p>En los préstamos activos se dispone del botón <strong>Renovar</strong>, que extiende la fecha de devolución tras confirmar la acción. Cada préstamo admite hasta dos renovaciones y solo puede renovarse mientras no esté vencido; en caso contrario, la fila indica que ya no se puede renovar.</p>
+</section>
+
+<section class="pagina">
+  <h1>8. Módulo de devoluciones</h1>
+  <p>Este módulo permite registrar la entrega de los libros que permanecen fuera de la biblioteca. Se accede mediante la opción <strong>Devoluciones</strong> del menú o desde el acceso directo de la pantalla de inicio.</p>
+  <figure><img src="img/10-devoluciones.jpg" alt=""><figcaption>Figura 10. Libros pendientes de devolución</figcaption></figure>
+  <p>El listado contiene únicamente los préstamos sin devolver. Para cada uno se muestran el libro y el lector, el vencimiento con los días de atraso y la multa que se generará al devolverlo. El campo de búsqueda localiza por título o usuario, y el enlace <strong>Ver multas</strong> conduce al módulo correspondiente.</p>
+  <p>Para registrar una devolución se presiona <strong>Registrar devolución</strong> en la fila del préstamo y se confirma la acción. El sistema marca el préstamo como devuelto, repone el ejemplar a la estantería y, si la entrega es posterior al vencimiento, genera automáticamente la multa. Al pie del listado se informa cuántos libros están pendientes y cuántos de ellos se encuentran atrasados.</p>
+</section>
+
+<section class="pagina">
+  <h1>9. Módulo de multas</h1>
+  <p>Este módulo concentra las multas generadas por devolver libros con atraso y permite registrar su cobro. Se accede mediante la opción <strong>Multas</strong> del menú.</p>
+  <figure><img src="img/11-multas.jpg" alt=""><figcaption>Figura 11. Listado de multas</figcaption></figure>
+  <p>Cada fila presenta al usuario y el libro, los días de atraso, el monto y el estado de la multa. Una multa <strong>por cobrar</strong> indica la fecha en que fue generada y ofrece el botón <strong>Registrar pago</strong>; una multa <strong>pagada</strong> indica la fecha de cobro. Las pestañas <strong>Todas</strong>, <strong>Por cobrar</strong> y <strong>Pagadas</strong> filtran el listado, y el campo de búsqueda localiza por nombre del usuario o título del libro. Al pie se muestra la cantidad de multas y el total por cobrar de la lista.</p>
+  <p>El monto se calcula a razón de Q2.00 por cada día de atraso, con un tope de Q100.00 por préstamo. Mientras un usuario tenga una multa por cobrar no podrá realizar nuevos préstamos; al registrar el pago queda habilitado nuevamente.</p>
+</section>
+
+<section class="pagina">
+  <h1>10. Módulo de reportes</h1>
+  <p>Este módulo genera listados de consulta sobre la información de la biblioteca. Se accede mediante la opción <strong>Reportes</strong> del menú.</p>
+  <figure><img src="img/12-reportes.jpg" alt=""><figcaption>Figura 12. Reporte de libros disponibles</figcaption></figure>
+  <p>Los reportes disponibles, seleccionables mediante las pestañas superiores, son:</p>
+  <table class="datos">
+    <tr><th>Reporte</th><th>Contenido</th></tr>
+    <tr><td>Libros disponibles</td><td>Libros con ejemplares en estantería: ISBN, título, autor, categoría y ejemplares disponibles.</td></tr>
+    <tr><td>Préstamos activos</td><td>Préstamos vigentes aún no devueltos.</td></tr>
+    <tr><td>Libros atrasados</td><td>Libros cuya fecha de devolución venció, con los días de atraso y la multa estimada.</td></tr>
+    <tr><td>Usuarios</td><td>Relación de lectores y bibliotecarios registrados.</td></tr>
+    <tr><td>Multas</td><td>Multas generadas, con su estado y monto.</td></tr>
+  </table>
+  <figure><img src="img/13-reporte-atrasados.jpg" alt=""><figcaption>Figura 13. Reporte de libros atrasados</figcaption></figure>
+  <p>Cada reporte incluye una línea de resumen con los totales. El botón <strong>Descargar CSV</strong> exporta el reporte que se está visualizando a un archivo que puede abrirse en una hoja de cálculo.</p>
+</section>
+
+<section class="pagina">
+  <h1>11. Reglas del servicio</h1>
+  <p>El sistema aplica de forma automática las siguientes reglas, que el usuario debe tener presentes al operar los módulos de préstamos, devoluciones y multas.</p>
+  <table class="datos">
+    <tr><th>Concepto</th><th>Regla</th></tr>
+    <tr><td>Préstamos de un lector</td><td>Hasta 3 libros a la vez, con un plazo de 7 días.</td></tr>
+    <tr><td>Préstamos de un bibliotecario</td><td>Hasta 5 libros a la vez, con un plazo de 14 días.</td></tr>
+    <tr><td>Renovaciones</td><td>Hasta 2 por préstamo, siempre que el préstamo no esté vencido.</td></tr>
+    <tr><td>Multa por atraso</td><td>Q2.00 por cada día de atraso, con un tope de Q100.00.</td></tr>
+    <tr><td>Restricciones</td><td>Un usuario con multas pendientes o con libros atrasados no puede realizar nuevos préstamos.</td></tr>
+    <tr><td>Disponibilidad</td><td>Solo pueden prestarse libros con al menos un ejemplar en estantería.</td></tr>
+  </table>
+
+  <h1 style="margin-top:20pt">12. Mensajes de validación y recomendaciones</h1>
+  <p>Ante una operación que incumple una regla, el sistema presenta un mensaje descriptivo y no modifica los datos. Los casos más habituales son los siguientes:</p>
+  <ul>
+    <li><strong>Campos obligatorios vacíos o con formato incorrecto</strong> en los formularios de libros y usuarios. Se corrige completando o ajustando los campos señalados.</li>
+    <li><strong>Préstamo rechazado</strong> por multa pendiente, libro atrasado, límite de préstamos alcanzado o libro sin ejemplares disponibles. Se resuelve registrando la devolución o el pago correspondiente, o eligiendo otro libro.</li>
+    <li><strong>Renovación no permitida</strong> por haber agotado las renovaciones o por estar vencido el préstamo. En este caso debe registrarse la devolución.</li>
+  </ul>
+  <p>Se recomienda, como buenas prácticas de uso: verificar el resumen del préstamo antes de confirmarlo; registrar las devoluciones el mismo día en que ocurren, para que la multa se calcule correctamente; y consultar periódicamente los reportes de libros atrasados y de multas para dar seguimiento a los usuarios con pendientes.</p>
+</section>
+
+</body>
+</html>
