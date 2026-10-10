@@ -16,6 +16,8 @@ Proyecto Integrador de Programación II (Universidad San Pablo de Guatemala): ap
 
 Catedrático: Erik Arnulfo Santizo Bardales · Fecha de presentación: 10 de octubre de 2026.
 
+El reparto de módulos entre los integrantes está en [docs/05-reparto-de-trabajo.md](docs/05-reparto-de-trabajo.md).
+
 ## Funcionalidad
 
 | Módulo | Qué permite |
